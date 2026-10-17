@@ -11,7 +11,7 @@ type Pose = { x: number; y: number; s: number; ry: number; rz: number; show: num
 export const POSES: Record<string, Pose> = {
   hero: { x: 0.38, y: -0.15, s: 1.1, ry: 0.35, rz: -0.06, show: 1, bg: "#F8D9C6" },
   reveal: { x: -0.42, y: 0.05, s: 1.05, ry: 1.75, rz: 0.22, show: 1, bg: "#FFF1E4" },
-  viewer: { x: 0.1, y: -0.1, s: 1.2, ry: 0, rz: 0, show: 1, bg: "#E6F0F8" },
+  viewer: { x: 0.1, y: 0.1, s: 1.0, ry: 0, rz: 0, show: 1, bg: "#E6F0F8" },
   form: { x: 0.36, y: -0.1, s: 1.15, ry: 0.9, rz: 0, show: 1, bg: "#E4EEDD" },
   cap: { x: 0.36, y: -3.55, s: 2.4, ry: 2.2, rz: 0, show: 1, bg: "#DCEAD4" },
   ritual: { x: 0.36, y: 2.4, s: 1.9, ry: 3.4, rz: 0, show: 1, bg: "#E9F0E2" },

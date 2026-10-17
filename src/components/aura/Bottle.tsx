@@ -68,7 +68,7 @@ export function BottleMesh({ body, cap }: { body: string; cap: string }) {
         <meshPhysicalMaterial ref={bodyMat} color={body} roughness={0.42} metalness={0.05} clearcoat={0.55} clearcoatRoughness={0.35} sheen={0.4} sheenColor="#ffffff" />
       </mesh>
       {label && (
-        <mesh position={[0, 1.2, 0]}>
+        <mesh position={[0, 1.2, 0]} rotation-y={-Math.PI / 2}>
           <cylinderGeometry args={[0.603, 0.603, 1.6, 96, 1, true]} />
           <meshStandardMaterial map={label} transparent roughness={0.6} depthWrite={false} />
         </mesh>

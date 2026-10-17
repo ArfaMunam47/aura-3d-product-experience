@@ -7,10 +7,10 @@ import { Studio } from "./Stage";
 import { VARIANTS, auraStore, scrollToId, useAura } from "@/lib/aura-store";
 
 const SLOTS = [
-  { x: -3.3, z: -0.6, y: 0.15 },
-  { x: -1.1, z: 0.2, y: 0 },
-  { x: 1.1, z: -0.4, y: 0.25 },
-  { x: 3.3, z: 0.3, y: -0.05 },
+  { x: -4.6, z: -0.6, y: 0.15 },
+  { x: -1.55, z: 0.2, y: 0 },
+  { x: 1.55, z: -0.4, y: 0.25 },
+  { x: 4.6, z: 0.3, y: -0.05 },
 ];
 
 function Item({ i, visible, hovered }: { i: number; visible: boolean; hovered: boolean }) {
