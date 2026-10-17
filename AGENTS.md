@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- The AURA page uses one fixed 3D canvas whose bottle pose is driven by scroll position across `[data-scene]` sections (poses in Stage.tsx); add a pose when adding a scene, so the bottle never jumps.
