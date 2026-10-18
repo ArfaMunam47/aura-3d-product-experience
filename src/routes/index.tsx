@@ -122,7 +122,7 @@ function Hero() {
         <div className="pt-24 md:pt-0">
           <p className="eyebrow rise" style={{ animationDelay: "0.2s" }}>Introducing AURA</p>
           <h1 className="display-xl mt-6 rise" style={{ animationDelay: "0.35s" }}>
-            carry a <strong>little calm</strong>,<br />everywhere you go
+            carry a<br /><strong>little calm</strong>
           </h1>
           <p className="lede mt-6 max-w-sm rise" style={{ animationDelay: "0.5s" }}>
             Meet AURA. Everyday hydration, thoughtfully reimagined.
@@ -297,7 +297,7 @@ function Final() {
       <Wave />
       <div className="container-aura grid md:grid-cols-2">
         <InView className="pt-24 md:pt-0">
-          <h2 className="display-lg max-w-xl">make room for your<br /><strong>everyday AURA</strong></h2>
+          <h2 className="display-lg max-w-xl">make room for your<br /><strong>everyday <span className="normal-case">AURA</span></strong></h2>
           <p className="lede mt-5 max-w-sm">A thoughtful design for a ritual worth keeping.</p>
           <button className="btn-pill btn-pill-lg mt-10" onClick={() => scrollToId("bottle")}>Explore AURA</button>
         </InView>
