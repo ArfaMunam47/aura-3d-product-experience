@@ -8,23 +8,24 @@ import { auraStore, useAura, variantById, type DetailView } from "@/lib/aura-sto
 type Pose = { x: number; y: number; s: number; ry: number; rz: number; show: number; bg: string };
 
 /** One pose per [data-scene] element, in DOM order. x is a fraction of the half-viewport width. */
+/** Visible height at z=0 is ≈6.3 units; bottle is 3.6 units tall, so s≈0.85 fills ~48% of the screen. */
 export const POSES: Record<string, Pose> = {
-  hero: { x: 0.38, y: -0.15, s: 1.1, ry: 0.35, rz: -0.06, show: 1, bg: "#F8D9C6" },
-  reveal: { x: -0.42, y: 0.05, s: 1.05, ry: 1.75, rz: 0.22, show: 1, bg: "#FFF1E4" },
-  viewer: { x: 0.1, y: 0.1, s: 1.0, ry: 0, rz: 0, show: 1, bg: "#E6F0F8" },
-  form: { x: 0.36, y: -0.1, s: 1.15, ry: 0.9, rz: 0, show: 1, bg: "#E4EEDD" },
-  cap: { x: 0.36, y: -3.55, s: 2.4, ry: 2.2, rz: 0, show: 1, bg: "#DCEAD4" },
-  ritual: { x: 0.36, y: 2.4, s: 1.9, ry: 3.4, rz: 0, show: 1, bg: "#E9F0E2" },
-  collection: { x: 0, y: -7, s: 0.6, ry: 4.5, rz: 0, show: 0, bg: "#FFF8EF" },
-  world: { x: 0.5, y: -0.6, s: 0.85, ry: 5.9, rz: 0, show: 1, bg: "#F7E6D6" },
-  final: { x: 0, y: -0.25, s: 1.15, ry: Math.PI * 2, rz: 0, show: 1, bg: "#F3B9A0" },
+  hero: { x: 0.44, y: -0.05, s: 0.88, ry: 0.25, rz: -0.36, show: 1, bg: "#A9C4E2" },
+  reveal: { x: 0.42, y: 0, s: 0.8, ry: 1.3, rz: 0.3, show: 1, bg: "#FBF6EE" },
+  viewer: { x: 0, y: 0, s: 0.95, ry: 0, rz: 0, show: 1, bg: "#F6C9B2" },
+  form: { x: -0.42, y: 0, s: 0.92, ry: 0.9, rz: 0.12, show: 1, bg: "#CFE2C3" },
+  cap: { x: -0.42, y: -1.7, s: 1.45, ry: 2.2, rz: 0.05, show: 1, bg: "#BFD8B4" },
+  ritual: { x: -0.42, y: 1.4, s: 1.35, ry: 3.4, rz: -0.05, show: 1, bg: "#E6EFDE" },
+  collection: { x: 0, y: -6, s: 0.6, ry: 4.5, rz: 0, show: 0, bg: "#FFFFFF" },
+  world: { x: 0, y: -6, s: 0.6, ry: 5.2, rz: 0, show: 0, bg: "#F7E3D3" },
+  final: { x: 0.44, y: -0.05, s: 0.85, ry: Math.PI * 2 + 0.25, rz: -0.36, show: 1, bg: "#A9C4E2" },
 };
 
 const DETAIL: Record<DetailView, { s: number; y: number } | null> = {
   full: null,
-  cap: { s: 2.6, y: -3.9 },
-  finish: { s: 2.0, y: -0.3 },
-  base: { s: 2.2, y: 2.9 },
+  cap: { s: 1.6, y: -2.0 },
+  finish: { s: 1.3, y: -0.2 },
+  base: { s: 1.5, y: 1.7 },
 };
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
