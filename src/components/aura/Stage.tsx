@@ -66,17 +66,17 @@ function Rig() {
     const mobile = size.width < 820;
     const halfW = viewport.width / 2;
 
-    let tx = lerp(a.x, b.x, f) * halfW * (mobile ? 0 : 1);
-    let ty = lerp(a.y, b.y, f);
-    let ts = lerp(a.s, b.s, f) * (mobile ? 0.78 : 1);
-    const show = lerp(a.show, b.show, f);
     const inViewer = activeName === "viewer" ? 1 : 0;
+    let tx = lerp(a.x, b.x, f) * halfW * (mobile ? 0.55 : 1);
+    let ty = lerp(a.y, b.y, f);
+    let ts = lerp(a.s, b.s, f) * (mobile ? 0.62 : 1);
+    const show = lerp(a.show, b.show, f);
     const d = DETAIL[st.detail];
     if (inViewer && d) {
-      ts = d.s * (mobile ? 0.8 : 1);
-      ty = d.y * (mobile ? 0.8 : 1);
+      ts = d.s * (mobile ? 0.7 : 1);
+      ty = d.y * (mobile ? 0.7 : 1);
     }
-    if (mobile) ty += activeName === "hero" ? -0.6 : 0;
+    if (mobile && !inViewer) ty -= 1.15;
 
     // background
     tmpA.set(a.bg);
