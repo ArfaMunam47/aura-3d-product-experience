@@ -4,6 +4,8 @@ import { Stage } from "@/components/aura/Stage";
 import { Collection } from "@/components/aura/Collection";
 import { VARIANTS, auraStore, scrollToId, useAura, variantById, type DetailView } from "@/lib/aura-store";
 import worldImg from "@/assets/aura-world.jpg";
+import landscapeImg from "@/assets/aura-landscape.jpg";
+import fieldImg from "@/assets/aura-field.jpg";
 
 export const Route = createFileRoute("/")({
   ssr: false,
@@ -50,7 +52,7 @@ function AuraPage() {
         <section data-scene="collection" id="colors" className="scene flex-col justify-center gap-10 py-24">
           <div className="text-center">
             <p className="eyebrow">05 — The collection</p>
-            <h2 className="display-lg mt-4">Four moods, one form.</h2>
+            <h2 className="display-lg mt-4">four moods, <strong>one form</strong></h2>
           </div>
           <Collection />
         </section>
@@ -88,10 +90,10 @@ function Nav() {
   return (
     <header className="fixed inset-x-0 top-0 z-40">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 md:px-10">
-        <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="wordmark text-lg" aria-label="AURA, back to top">
+        <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="wordmark text-lg text-foreground" aria-label="AURA, back to top">
           AURA
         </button>
-        <ul className="hidden gap-9 text-sm text-foreground/75 md:flex">
+        <ul className="hidden gap-9 text-[0.95rem] font-medium text-foreground/80 md:flex">
           {links.map(([l, id]) => (
             <li key={id}>
               <button className="nav-link" onClick={() => scrollToId(id)}>{l}</button>
@@ -104,21 +106,30 @@ function Nav() {
   );
 }
 
+function Wave({ color = "var(--coral)" }: { color?: string }) {
+  return (
+    <svg className="hero-wave hidden md:block" viewBox="0 0 400 1000" preserveAspectRatio="none" aria-hidden>
+      <path d="M140 0 C 60 160, 220 300, 120 470 C 30 620, 180 780, 90 1000 L 400 1000 L 400 0 Z" fill={color} opacity="0.85" />
+    </svg>
+  );
+}
+
 function Hero() {
   return (
-    <section data-scene="hero" className="scene">
+    <section data-scene="hero" className="scene on-blue">
+      <Wave />
       <div className="container-aura grid md:grid-cols-2">
         <div className="pt-24 md:pt-0">
           <p className="eyebrow rise" style={{ animationDelay: "0.2s" }}>Introducing AURA</p>
           <h1 className="display-xl mt-6 rise" style={{ animationDelay: "0.35s" }}>
-            Carry a<br /><em>little calm.</em>
+            carry a <strong>little calm</strong>,<br />everywhere you go
           </h1>
           <p className="lede mt-6 max-w-sm rise" style={{ animationDelay: "0.5s" }}>
             Meet AURA. Everyday hydration, thoughtfully reimagined.
           </p>
           <div className="mt-10 flex flex-wrap gap-3 rise" style={{ animationDelay: "0.65s" }}>
             <button className="btn-pill" onClick={() => scrollToId("discover")}>Discover AURA</button>
-            <button className="btn-ghost" onClick={() => scrollToId("bottle")}>Explore the bottle</button>
+            <button className="btn-ghost text-primary-foreground" style={{ borderColor: "color-mix(in oklab, var(--ivory) 60%, transparent)" }} onClick={() => scrollToId("bottle")}>Explore the bottle</button>
           </div>
         </div>
       </div>
@@ -132,20 +143,20 @@ function Hero() {
 
 function Reveal() {
   return (
-    <section data-scene="reveal" id="discover" className="scene">
-      <div className="container-aura grid md:grid-cols-2">
-        <div className="hidden md:block" />
-        <InView className="md:pl-10">
+    <section data-scene="reveal" id="discover" className="scene tone-forest">
+      <div className="container-aura grid items-center gap-10 md:grid-cols-[1fr_1fr]">
+        <InView>
           <p className="eyebrow">02 — The reveal</p>
-          <h2 className="display-lg mt-5">Less noise.<br /><em>More refresh.</em></h2>
+          <h2 className="display-lg mt-5">less noise,<br /><em>more refresh,</em><br />every day</h2>
           <p className="lede mt-6 max-w-sm">Thoughtfully designed for the little rituals that make every day feel better.</p>
         </InView>
+        <InView className="photo ml-auto hidden aspect-[4/5] w-[78%] md:block">
+          <img src={landscapeImg} alt="Misty green mountain valley at sunrise" loading="lazy" width={1024} height={1280} />
+        </InView>
       </div>
-      <span className="ghost-word" aria-hidden>refresh</span>
     </section>
   );
 }
-
 function Viewer({ webgl }: { webgl: boolean }) {
   const variantId = useAura((s) => s.variant);
   const detail = useAura((s) => s.detail);
@@ -185,7 +196,7 @@ function Viewer({ webgl }: { webgl: boolean }) {
       <div className="container-aura pointer-events-none relative grid h-full gap-10 md:grid-cols-[1fr_1fr_18rem]">
         <div className="pointer-events-auto self-start pt-28 md:self-center md:pt-0">
           <p className="eyebrow">03 — Interactive</p>
-          <h2 className="display-lg mt-5">Your color.<br /><em>Your rhythm.</em></h2>
+          <h2 className="display-lg mt-5">your color,<br /><em>your rhythm</em></h2>
           <p className="lede mt-5 max-w-xs">One considered design. Four different moods.</p>
           <p className="mt-8 text-xs tracking-[0.25em] text-muted-foreground uppercase">
             {webgl ? (dragging ? "Rotating…" : "Drag to rotate · ↔") : "3D unavailable on this device"}
@@ -227,29 +238,29 @@ function Viewer({ webgl }: { webgl: boolean }) {
 }
 
 const DETAIL_COPY = [
-  { scene: "form", n: "01", t: "Considered form", d: "Clean lines. Balanced proportions. A shape designed to feel natural in your hand.", tag: "Silhouette" },
-  { scene: "cap", n: "02", t: "The little details", d: "From the cap to the finish, every element deserves attention.", tag: "Cap & carry loop" },
-  { scene: "ritual", n: "03", t: "Made for everyday rituals", d: "A considered companion for work, study, travel, and everyday moments.", tag: "Weighted base" },
+  { scene: "form", n: "01", t: <>considered <strong>form</strong></>, d: "Clean lines. Balanced proportions. A shape designed to feel natural in your hand.", tag: "Silhouette" },
+  { scene: "cap", n: "02", t: <>the little <strong>details</strong></>, d: "From the cap to the finish, every element deserves attention.", tag: "Cap & carry loop" },
+  { scene: "ritual", n: "03", t: <>made for <strong>everyday rituals</strong></>, d: "A considered companion for work, study, travel, and everyday moments.", tag: "Weighted base" },
 ];
 
 function Details() {
   return (
     <>
       {DETAIL_COPY.map((c, i) => (
-        <section key={c.scene} data-scene={c.scene} className="scene">
+        <section key={c.scene} data-scene={c.scene} className="scene tone-forest">
           <div className="container-aura grid md:grid-cols-2">
-            <InView>
-              {i === 0 && <p className="eyebrow mb-8">04 — Details worth noticing</p>}
-              <span className="font-display text-7xl text-primary/80">{c.n}</span>
-              <h3 className="display-md mt-3">{c.t}</h3>
-              <p className="lede mt-4 max-w-sm">{c.d}</p>
-            </InView>
             <InView className="relative hidden md:block">
               <div className="leader">
-                <span className="leader-label">{c.tag}</span>
-                <span className="leader-line" />
                 <span className="leader-dot" />
+                <span className="leader-line" />
+                <span className="leader-label">{c.tag}</span>
               </div>
+            </InView>
+            <InView className="pt-24 md:pt-0 md:pl-10">
+              {i === 0 && <p className="eyebrow mb-8">04 — Details worth noticing</p>}
+              <span className="font-display text-6xl font-extralight text-primary">{c.n}</span>
+              <h3 className="display-md mt-3">{c.t}</h3>
+              <p className="lede mt-4 max-w-sm">{c.d}</p>
             </InView>
           </div>
         </section>
@@ -260,14 +271,19 @@ function Details() {
 
 function World() {
   return (
-    <section data-scene="world" className="scene">
-      <div className="container-aura grid items-center gap-10 md:grid-cols-[1.2fr_1fr]">
-        <InView className="world-frame">
-          <img src={worldImg} alt="A sunlit desk with a notebook, ceramic cup and eucalyptus" loading="lazy" width={1600} height={1008} className="h-full w-full object-cover" />
+    <section data-scene="world" className="scene tone-forest">
+      <div className="container-aura grid items-center gap-10 md:grid-cols-[1.15fr_1fr]">
+        <InView className="relative h-[70vh] min-h-[420px]">
+          <div className="photo absolute left-0 top-0 h-[72%] w-[58%]">
+            <img src={fieldImg} alt="A woman holding a sage AURA bottle in a sunlit field" loading="lazy" width={1024} height={1280} />
+          </div>
+          <div className="photo absolute bottom-0 right-0 h-[56%] w-[52%]">
+            <img src={worldImg} alt="A sunlit desk with a notebook, ceramic cup and eucalyptus" loading="lazy" width={1600} height={1008} />
+          </div>
         </InView>
         <InView className="md:pl-4">
           <p className="eyebrow">06 — In your world</p>
-          <h2 className="display-lg mt-5">Small rituals.<br /><em>Better moments.</em></h2>
+          <h2 className="display-lg mt-5">small rituals,<br /><em>better moments</em></h2>
           <p className="lede mt-5 max-w-xs">Designed to fit naturally into the rhythm of your day.</p>
         </InView>
       </div>
@@ -277,13 +293,14 @@ function World() {
 
 function Final() {
   return (
-    <section data-scene="final" className="scene flex-col justify-between py-28">
-      <InView className="text-center">
-        <h2 className="display-lg mx-auto max-w-2xl">Make room for your<br /><em>everyday AURA.</em></h2>
-        <p className="lede mx-auto mt-4 max-w-sm">A thoughtful design for a ritual worth keeping.</p>
-      </InView>
-      <div className="text-center">
-        <button className="btn-pill btn-pill-lg" onClick={() => scrollToId("bottle")}>Explore AURA</button>
+    <section data-scene="final" className="scene on-blue">
+      <Wave />
+      <div className="container-aura grid md:grid-cols-2">
+        <InView className="pt-24 md:pt-0">
+          <h2 className="display-lg max-w-xl">make room for your<br /><strong>everyday AURA</strong></h2>
+          <p className="lede mt-5 max-w-sm">A thoughtful design for a ritual worth keeping.</p>
+          <button className="btn-pill btn-pill-lg mt-10" onClick={() => scrollToId("bottle")}>Explore AURA</button>
+        </InView>
       </div>
     </section>
   );
@@ -291,9 +308,9 @@ function Final() {
 
 function Footer() {
   return (
-    <footer className="relative z-20 border-t border-foreground/10 bg-background">
+    <footer className="relative z-40 bg-background">
       <div className="container-aura flex flex-col items-center justify-between gap-6 py-10 md:flex-row">
-        <span className="wordmark text-base">AURA</span>
+        <span className="wordmark text-base text-foreground">AURA</span>
         <ul className="flex gap-8 text-sm text-muted-foreground">
           {([["Discover", "discover"], ["The Bottle", "bottle"], ["Colors", "colors"]] as const).map(([l, id]) => (
             <li key={id}><button className="nav-link" onClick={() => scrollToId(id)}>{l}</button></li>
