@@ -149,7 +149,7 @@ export function Stage() {
         camera={{ position: [0, 0, 10], fov: 35 }}
         gl={{ antialias: true, alpha: true }}
         onCreated={() => setTimeout(() => auraStore.set({ ready: true }), 250)}
-        eventSource={typeof document !== "undefined" ? document.body : undefined}
+        eventSource={document.body}
         eventPrefix="client"
       >
         <Studio />
