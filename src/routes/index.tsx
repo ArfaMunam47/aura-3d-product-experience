@@ -326,7 +326,7 @@ function InView({ children, className = "" }: { children: React.ReactNode; class
   const ref = useRef<HTMLDivElement>(null);
   const [on, setOn] = useState(false);
   useEffect(() => {
-    const io = new IntersectionObserver(([e]) => setOn(e.isIntersecting), { threshold: 0.25 });
+    const io = new IntersectionObserver(([e]) => setOn(!!e?.isIntersecting), { threshold: 0.25 });
     if (ref.current) io.observe(ref.current);
     return () => io.disconnect();
   }, []);

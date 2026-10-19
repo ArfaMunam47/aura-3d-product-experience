@@ -1,5 +1,5 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { ContactShadows, Environment, Lightformer } from "@react-three/drei";
+import { Environment, Lightformer } from "@react-three/drei";
 import { useRef } from "react";
 import * as THREE from "three";
 import { BottleMesh } from "./Bottle";
@@ -15,7 +15,7 @@ export const POSES: Record<string, Pose> = {
   viewer: { x: 0, y: 0, s: 0.95, ry: 0, rz: 0, show: 1, bg: "#F6C9B2" },
   form: { x: -0.42, y: 0, s: 0.92, ry: 0.9, rz: 0.12, show: 1, bg: "#CFE2C3" },
   cap: { x: -0.42, y: -1.7, s: 1.45, ry: 2.2, rz: 0.05, show: 1, bg: "#BFD8B4" },
-  ritual: { x: -0.42, y: 1.4, s: 1.35, ry: 3.4, rz: -0.05, show: 1, bg: "#E6EFDE" },
+  ritual: { x: -0.42, y: 0.9, s: 1.15, ry: 3.4, rz: -0.05, show: 1, bg: "#E6EFDE" },
   collection: { x: 0, y: -6, s: 0.6, ry: 4.5, rz: 0, show: 0, bg: "#FFFFFF" },
   world: { x: 0, y: -6, s: 0.6, ry: 5.2, rz: 0, show: 0, bg: "#F7E3D3" },
   final: { x: 0.44, y: -0.05, s: 0.85, ry: Math.PI * 2 + 0.25, rz: -0.36, show: 1, bg: "#A9C4E2" },
@@ -41,14 +41,16 @@ function readScroll() {
     const r = el.getBoundingClientRect();
     return r.top + r.height / 2;
   });
+  const mid = (k: number) => mids[k] ?? 0;
   let i = 0;
-  while (i < mids.length - 1 && mids[i + 1] <= c) i++;
+  while (i < mids.length - 1 && mid(i + 1) <= c) i++;
   let f = 0;
-  if (i < mids.length - 1 && mids[i] <= c) f = (c - mids[i]) / (mids[i + 1] - mids[i]);
-  if (i === 0 && mids[0] > c) f = 0;
-  const a = POSES[els[i]?.dataset.scene ?? "hero"] ?? POSES.hero;
-  const b = POSES[els[Math.min(i + 1, els.length - 1)]?.dataset.scene ?? "hero"] ?? a;
-  return { a, b, f: ease(Math.min(Math.max(f, 0), 1)), activeName: els[f > 0.5 ? i + 1 : i]?.dataset.scene };
+  if (i < mids.length - 1 && mid(i) <= c) f = (c - mid(i)) / (mid(i + 1) - mid(i));
+  if (i === 0 && mid(0) > c) f = 0;
+  const hero = POSES["hero"] as Pose;
+  const a: Pose = POSES[els[i]?.dataset["scene"] ?? "hero"] ?? hero;
+  const b: Pose = POSES[els[Math.min(i + 1, els.length - 1)]?.dataset["scene"] ?? "hero"] ?? a;
+  return { a, b, f: ease(Math.min(Math.max(f, 0), 1)), activeName: els[f > 0.5 ? i + 1 : i]?.dataset["scene"] };
 }
 
 function Rig() {
@@ -69,14 +71,14 @@ function Rig() {
     const inViewer = activeName === "viewer" ? 1 : 0;
     let tx = lerp(a.x, b.x, f) * halfW * (mobile ? 0.55 : 1);
     let ty = lerp(a.y, b.y, f);
-    let ts = lerp(a.s, b.s, f) * (mobile ? 0.62 : 1);
+    let ts = lerp(a.s, b.s, f) * (mobile ? 0.5 : 1);
     const show = lerp(a.show, b.show, f);
     const d = DETAIL[st.detail];
     if (inViewer && d) {
       ts = d.s * (mobile ? 0.7 : 1);
       ty = d.y * (mobile ? 0.7 : 1);
     }
-    if (mobile && !inViewer) ty -= 1.15;
+    if (mobile && !inViewer) ty -= 1.9;
 
     // background
     tmpA.set(a.bg);
@@ -97,7 +99,7 @@ function Rig() {
     const t = state.clock.elapsedTime;
     const idle = inViewer ? 0 : 1;
     if (group.current) {
-      group.current.position.set(c.x, c.y + Math.sin(t * 0.9) * 0.05 * idle, 0);
+      group.current.position.set(c.x, c.y + Math.sin(t * 0.9) * 0.03 * idle, 0);
       group.current.scale.setScalar(c.s);
       group.current.rotation.set(c.dy, 0, c.rz + Math.sin(t * 0.6) * 0.015 * idle);
     }
@@ -113,11 +115,10 @@ function Rig() {
 
   return (
     <group ref={group}>
-      <group position={[0, -1.62, 0]}>
+      <group position={[0, -1.8, 0]}>
         <group ref={inner}>
           <BottleMesh body={variant.body} cap={variant.cap} />
         </group>
-        <ContactShadows position={[0, 0.001, 0]} scale={3.2} blur={2.4} opacity={0.38} far={1.5} color="#38253F" />
       </group>
     </group>
   );
@@ -141,14 +142,14 @@ export function Studio() {
 
 export function Stage() {
   return (
-    <div className="pointer-events-none fixed inset-0 z-10" aria-hidden>
+    <div className="pointer-events-none fixed inset-0 stage-layer" aria-hidden>
       <Canvas
         shadows
         dpr={[1, 2]}
         camera={{ position: [0, 0, 10], fov: 35 }}
         gl={{ antialias: true, alpha: true }}
         onCreated={() => setTimeout(() => auraStore.set({ ready: true }), 250)}
-        eventSource={typeof document !== "undefined" ? document.body : undefined}
+        eventSource={document.body}
         eventPrefix="client"
       >
         <Studio />

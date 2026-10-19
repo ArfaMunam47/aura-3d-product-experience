@@ -1,4 +1,4 @@
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { ContactShadows } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
@@ -15,16 +15,19 @@ const SLOTS = [
 
 function Item({ i, visible, hovered }: { i: number; visible: boolean; hovered: boolean }) {
   const ref = useRef<THREE.Group>(null);
-  const v = VARIANTS[i];
+  const v = VARIANTS[i]!;
   const born = useRef<number | null>(null);
+  const { size } = useThree();
   useFrame((s, d) => {
     if (!ref.current) return;
+    const m = size.width < 640 ? 0.42 : 1;
+    ref.current.scale.setScalar(size.width < 640 ? 0.55 : 1);
     if (visible && born.current === null) born.current = s.clock.elapsedTime;
     const age = born.current === null ? 0 : s.clock.elapsedTime - born.current - i * 0.15;
     const p = Math.min(Math.max(age / 0.9, 0), 1);
     const e = 1 - Math.pow(1 - p, 3);
-    const slot = SLOTS[i];
-    ref.current.position.set(slot.x, slot.y - 1.8 + (1 - e) * -2.5 + (hovered ? 0.12 : 0), slot.z);
+    const slot = SLOTS[i]!;
+    ref.current.position.set(slot.x * m, slot.y - 1.8 + (1 - e) * -2.5 + (hovered ? 0.12 : 0), slot.z);
     ref.current.rotation.y += (0.5 - i * 0.25 + (hovered ? 0.5 : 0) - ref.current.rotation.y) * (1 - Math.exp(-4 * d));
     ref.current.visible = p > 0;
   });
@@ -43,7 +46,7 @@ export function Collection() {
   const active = useAura((s) => s.variant);
 
   useEffect(() => {
-    const io = new IntersectionObserver(([e]) => e.isIntersecting && setVisible(true), { threshold: 0.35 });
+    const io = new IntersectionObserver(([e]) => e?.isIntersecting && setVisible(true), { threshold: 0.35 });
     if (host.current) io.observe(host.current);
     return () => io.disconnect();
   }, []);
