@@ -69,14 +69,14 @@ function Rig() {
     const inViewer = activeName === "viewer" ? 1 : 0;
     let tx = lerp(a.x, b.x, f) * halfW * (mobile ? 0.55 : 1);
     let ty = lerp(a.y, b.y, f);
-    let ts = lerp(a.s, b.s, f) * (mobile ? 0.62 : 1);
+    let ts = lerp(a.s, b.s, f) * (mobile ? 0.5 : 1);
     const show = lerp(a.show, b.show, f);
     const d = DETAIL[st.detail];
     if (inViewer && d) {
       ts = d.s * (mobile ? 0.7 : 1);
       ty = d.y * (mobile ? 0.7 : 1);
     }
-    if (mobile && !inViewer) ty -= 1.15;
+    if (mobile && !inViewer) ty -= 1.9;
 
     // background
     tmpA.set(a.bg);
