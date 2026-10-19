@@ -41,14 +41,16 @@ function readScroll() {
     const r = el.getBoundingClientRect();
     return r.top + r.height / 2;
   });
+  const mid = (k: number) => mids[k] ?? 0;
   let i = 0;
-  while (i < mids.length - 1 && mids[i + 1] <= c) i++;
+  while (i < mids.length - 1 && mid(i + 1) <= c) i++;
   let f = 0;
-  if (i < mids.length - 1 && mids[i] <= c) f = (c - mids[i]) / (mids[i + 1] - mids[i]);
-  if (i === 0 && mids[0] > c) f = 0;
-  const a = POSES[els[i]?.dataset.scene ?? "hero"] ?? POSES.hero;
-  const b = POSES[els[Math.min(i + 1, els.length - 1)]?.dataset.scene ?? "hero"] ?? a;
-  return { a, b, f: ease(Math.min(Math.max(f, 0), 1)), activeName: els[f > 0.5 ? i + 1 : i]?.dataset.scene };
+  if (i < mids.length - 1 && mid(i) <= c) f = (c - mid(i)) / (mid(i + 1) - mid(i));
+  if (i === 0 && mid(0) > c) f = 0;
+  const hero = POSES["hero"] as Pose;
+  const a: Pose = POSES[els[i]?.dataset["scene"] ?? "hero"] ?? hero;
+  const b: Pose = POSES[els[Math.min(i + 1, els.length - 1)]?.dataset["scene"] ?? "hero"] ?? a;
+  return { a, b, f: ease(Math.min(Math.max(f, 0), 1)), activeName: els[f > 0.5 ? i + 1 : i]?.dataset["scene"] };
 }
 
 function Rig() {

@@ -46,7 +46,7 @@ export function Collection() {
   const active = useAura((s) => s.variant);
 
   useEffect(() => {
-    const io = new IntersectionObserver(([e]) => e.isIntersecting && setVisible(true), { threshold: 0.35 });
+    const io = new IntersectionObserver(([e]) => e?.isIntersecting && setVisible(true), { threshold: 0.35 });
     if (host.current) io.observe(host.current);
     return () => io.disconnect();
   }, []);
