@@ -15,7 +15,7 @@ const SLOTS = [
 
 function Item({ i, visible, hovered }: { i: number; visible: boolean; hovered: boolean }) {
   const ref = useRef<THREE.Group>(null);
-  const v = VARIANTS[i];
+  const v = VARIANTS[i]!;
   const born = useRef<number | null>(null);
   const { size } = useThree();
   useFrame((s, d) => {
@@ -26,7 +26,7 @@ function Item({ i, visible, hovered }: { i: number; visible: boolean; hovered: b
     const age = born.current === null ? 0 : s.clock.elapsedTime - born.current - i * 0.15;
     const p = Math.min(Math.max(age / 0.9, 0), 1);
     const e = 1 - Math.pow(1 - p, 3);
-    const slot = SLOTS[i];
+    const slot = SLOTS[i]!;
     ref.current.position.set(slot.x * m, slot.y - 1.8 + (1 - e) * -2.5 + (hovered ? 0.12 : 0), slot.z);
     ref.current.rotation.y += (0.5 - i * 0.25 + (hovered ? 0.5 : 0) - ref.current.rotation.y) * (1 - Math.exp(-4 * d));
     ref.current.visible = p > 0;
