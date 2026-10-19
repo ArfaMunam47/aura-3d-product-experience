@@ -178,3 +178,4 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
 @keyframes cue { 0%,100% { transform: scaleY(.3); } 50% { transform: scaleY(1); } }
 @keyframes load { from { transform: translateX(-100%); } to { transform: translateX(200%); } }
 @media (prefers-reduced-motion: reduce) { .rise, .inview { animation: none; opacity: 1; transform: none; transition: none; } html { scroll-behavior: auto; } }
+.stage-layer { z-index: 10; } @media (min-width: 768px) { .stage-layer { z-index: 30; } }
