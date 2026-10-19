@@ -179,3 +179,14 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
 @keyframes load { from { transform: translateX(-100%); } to { transform: translateX(200%); } }
 @media (prefers-reduced-motion: reduce) { .rise, .inview { animation: none; opacity: 1; transform: none; transition: none; } html { scroll-behavior: auto; } }
 .stage-layer { z-index: 10; } @media (min-width: 768px) { .stage-layer { z-index: 30; } }
+@layer components {
+  .reveal-frame { position: relative; aspect-ratio: 4/5; max-height: 78vh; margin-left: auto; width: 100%; max-width: 34rem; border-radius: 2rem; overflow: hidden; box-shadow: var(--shadow-soft); }
+  @media (min-width: 768px) { .reveal-frame { aspect-ratio: 5/6; } }
+  .reveal-frame img { width: 100%; height: 100%; object-fit: cover; }
+  .reveal-ground { position: absolute; inset: auto 0 0 0; height: 35%; background: linear-gradient(to top, color-mix(in oklab, var(--forest) 35%, transparent), transparent); }
+  .reveal-caption { position: absolute; left: 1.5rem; bottom: 1.5rem; font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; font-weight: 600; color: var(--ivory); }
+  .reveal-meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; max-width: 28rem; border-top: 1px solid color-mix(in oklab, var(--forest) 25%, transparent); padding-top: 1.25rem; }
+  .reveal-meta div { display: flex; flex-direction: column; gap: .2rem; }
+  .reveal-meta-k { font-family: var(--font-display); font-size: 1.5rem; color: var(--forest); font-weight: 500; }
+  .reveal-meta-v { font-size: .85rem; color: var(--muted-foreground); }
+}
