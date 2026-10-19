@@ -143,15 +143,26 @@ function Hero() {
 
 function Reveal() {
   return (
-    <section data-scene="reveal" id="discover" className="scene tone-forest">
-      <div className="container-aura grid items-center gap-10 md:grid-cols-[1fr_1fr]">
-        <InView>
-          <p className="eyebrow">02 — The reveal</p>
-          <h2 className="display-lg mt-5">less noise,<br /><em>more refresh,</em><br />every day</h2>
-          <p className="lede mt-6 max-w-sm">Thoughtfully designed for the little rituals that make every day feel better.</p>
+    <section data-scene="reveal" id="discover" className="scene tone-forest py-28">
+      <div className="container-aura grid items-center gap-12 md:grid-cols-12 md:gap-8">
+        <InView className="md:col-span-5 md:pr-6">
+          <p className="eyebrow">02 — Everyday refresh</p>
+          <h2 className="display-lg mt-5">less noise,<br /><em>more refresh,</em><br />every day.</h2>
+          <p className="lede mt-6 max-w-md">
+            A reusable bottle made for the little rituals that make every day feel better — at your desk, on the trail, and everywhere in between.
+          </p>
+          <div className="reveal-meta mt-10">
+            <div><span className="reveal-meta-k">Reusable</span><span className="reveal-meta-v">every day</span></div>
+            <div><span className="reveal-meta-k">Four</span><span className="reveal-meta-v">calm colors</span></div>
+            <div><span className="reveal-meta-k">One</span><span className="reveal-meta-v">considered form</span></div>
+          </div>
         </InView>
-        <InView className="photo ml-auto hidden aspect-[4/5] w-[78%] md:block">
-          <img src={landscapeImg} alt="Misty green mountain valley at sunrise" loading="lazy" width={1024} height={1280} />
+        <InView className="relative md:col-span-7">
+          <div className="reveal-frame">
+            <img src={landscapeImg} alt="Misty green mountain valley at sunrise" loading="lazy" width={1024} height={1280} />
+            <div className="reveal-ground" aria-hidden />
+            <span className="reveal-caption">Fresh air, carried with you</span>
+          </div>
         </InView>
       </div>
     </section>

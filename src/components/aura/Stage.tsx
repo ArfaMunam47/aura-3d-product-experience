@@ -10,15 +10,16 @@ type Pose = { x: number; y: number; s: number; ry: number; rz: number; show: num
 /** One pose per [data-scene] element, in DOM order. x is a fraction of the half-viewport width. */
 /** Visible height at z=0 is ≈6.3 units; bottle is 3.6 units tall, so s≈0.85 fills ~48% of the screen. */
 export const POSES: Record<string, Pose> = {
-  hero: { x: 0.44, y: -0.05, s: 0.88, ry: 0.25, rz: -0.36, show: 1, bg: "#A9C4E2" },
-  reveal: { x: 0.42, y: 0, s: 0.8, ry: 1.3, rz: 0.3, show: 1, bg: "#FBF6EE" },
+  // ry stays within ±0.45 rad of front so the full AURA wordmark is always readable.
+  hero: { x: 0.44, y: -0.05, s: 0.88, ry: 0.2, rz: -0.32, show: 1, bg: "#A9C4E2" },
+  reveal: { x: 0.36, y: -0.35, s: 0.72, ry: -0.15, rz: 0.06, show: 1, bg: "#F3EEDF" },
   viewer: { x: 0, y: 0, s: 0.95, ry: 0, rz: 0, show: 1, bg: "#F6C9B2" },
-  form: { x: -0.42, y: 0, s: 0.92, ry: 0.9, rz: 0.12, show: 1, bg: "#CFE2C3" },
-  cap: { x: -0.42, y: -1.7, s: 1.45, ry: 2.2, rz: 0.05, show: 1, bg: "#BFD8B4" },
-  ritual: { x: -0.42, y: 0.9, s: 1.15, ry: 3.4, rz: -0.05, show: 1, bg: "#E6EFDE" },
-  collection: { x: 0, y: -6, s: 0.6, ry: 4.5, rz: 0, show: 0, bg: "#FFFFFF" },
-  world: { x: 0, y: -6, s: 0.6, ry: 5.2, rz: 0, show: 0, bg: "#F7E3D3" },
-  final: { x: 0.44, y: -0.05, s: 0.85, ry: Math.PI * 2 + 0.25, rz: -0.36, show: 1, bg: "#A9C4E2" },
+  form: { x: -0.42, y: 0, s: 0.95, ry: 0.3, rz: 0.1, show: 1, bg: "#CFE2C3" },
+  cap: { x: -0.42, y: -1.25, s: 1.3, ry: -0.25, rz: 0.04, show: 1, bg: "#BFD8B4" },
+  ritual: { x: -0.42, y: 0.1, s: 1.0, ry: 0.4, rz: -0.06, show: 1, bg: "#E6EFDE" },
+  collection: { x: 0, y: -6, s: 0.6, ry: 0.2, rz: 0, show: 0, bg: "#FBF6EE" },
+  world: { x: 0, y: -6, s: 0.6, ry: 0.2, rz: 0, show: 0, bg: "#F7E3D3" },
+  final: { x: 0.44, y: -0.05, s: 0.85, ry: 0.2, rz: -0.32, show: 1, bg: "#A9C4E2" },
 };
 
 const DETAIL: Record<DetailView, { s: number; y: number } | null> = {
@@ -103,7 +104,7 @@ function Rig() {
       group.current.scale.setScalar(c.s);
       group.current.rotation.set(c.dy, 0, c.rz + Math.sin(t * 0.6) * 0.015 * idle);
     }
-    if (inner.current) inner.current.rotation.y = c.ry + c.dx + Math.sin(t * 0.4) * 0.12 * idle;
+    if (inner.current) inner.current.rotation.y = c.ry + c.dx + Math.sin(t * 0.4) * 0.05 * idle;
 
     // restrained pointer parallax on the camera
     pointer.current.x = lerp(pointer.current.x, state.pointer.x, k);
