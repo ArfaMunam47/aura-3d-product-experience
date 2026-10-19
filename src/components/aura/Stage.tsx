@@ -141,7 +141,7 @@ export function Studio() {
 
 export function Stage() {
   return (
-    <div className="pointer-events-none fixed inset-0 z-10" aria-hidden>
+    <div className="pointer-events-none fixed inset-0 stage-layer" aria-hidden>
       <Canvas
         shadows
         dpr={[1, 2]}
