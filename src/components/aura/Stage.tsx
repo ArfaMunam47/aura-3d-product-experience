@@ -1,5 +1,5 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { ContactShadows, Environment, Lightformer } from "@react-three/drei";
+import { Environment, Lightformer } from "@react-three/drei";
 import { useRef } from "react";
 import * as THREE from "three";
 import { BottleMesh } from "./Bottle";
@@ -97,7 +97,7 @@ function Rig() {
     const t = state.clock.elapsedTime;
     const idle = inViewer ? 0 : 1;
     if (group.current) {
-      group.current.position.set(c.x, c.y + Math.sin(t * 0.9) * 0.05 * idle, 0);
+      group.current.position.set(c.x, c.y + Math.sin(t * 0.9) * 0.03 * idle, 0);
       group.current.scale.setScalar(c.s);
       group.current.rotation.set(c.dy, 0, c.rz + Math.sin(t * 0.6) * 0.015 * idle);
     }
@@ -113,11 +113,10 @@ function Rig() {
 
   return (
     <group ref={group}>
-      <group position={[0, -1.62, 0]}>
+      <group position={[0, -1.8, 0]}>
         <group ref={inner}>
           <BottleMesh body={variant.body} cap={variant.cap} />
         </group>
-        <ContactShadows position={[0, 0.001, 0]} scale={3.2} blur={2.4} opacity={0.38} far={1.5} color="#38253F" />
       </group>
     </group>
   );
