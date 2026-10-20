@@ -3,6 +3,7 @@ import { Environment, Lightformer } from "@react-three/drei";
 import { useRef } from "react";
 import * as THREE from "three";
 import { BottleMesh } from "./Bottle";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { auraStore, useAura, variantById, type DetailView } from "@/lib/aura-store";
 
 type Pose = { x: number; y: number; s: number; ry: number; rz: number; show: number; bg: string };
@@ -11,15 +12,15 @@ type Pose = { x: number; y: number; s: number; ry: number; rz: number; show: num
 /** Visible height at z=0 is ≈6.3 units; bottle is 3.6 units tall, so s≈0.85 fills ~48% of the screen. */
 export const POSES: Record<string, Pose> = {
   // ry stays within ±0.45 rad of front so the full AURA wordmark is always readable.
-  hero: { x: 0.44, y: -0.05, s: 0.88, ry: 0.2, rz: -0.32, show: 1, bg: "#A9C4E2" },
-  reveal: { x: 0.36, y: -0.35, s: 0.72, ry: -0.15, rz: 0.06, show: 1, bg: "#F3EEDF" },
+  hero: { x: 0.44, y: -0.05, s: 1.03, ry: 0.12, rz: -0.24, show: 1, bg: "#A9C4E2" },
+  reveal: { x: 0, y: 0, s: 0.72, ry: 0, rz: 0, show: 0, bg: "#F3EEDF" },
   viewer: { x: 0, y: 0, s: 0.95, ry: 0, rz: 0, show: 1, bg: "#F6C9B2" },
   form: { x: -0.42, y: 0, s: 0.95, ry: 0.3, rz: 0.1, show: 1, bg: "#CFE2C3" },
   cap: { x: -0.42, y: -0.35, s: 1.08, ry: -0.25, rz: 0.04, show: 1, bg: "#BFD8B4" },
   ritual: { x: -0.42, y: 0.1, s: 1.0, ry: 0.4, rz: -0.06, show: 1, bg: "#E6EFDE" },
   collection: { x: 0, y: -6, s: 0.6, ry: 0.2, rz: 0, show: 0, bg: "#FBF6EE" },
   world: { x: 0, y: -6, s: 0.6, ry: 0.2, rz: 0, show: 0, bg: "#F7E3D3" },
-  final: { x: 0.44, y: -0.05, s: 0.85, ry: 0.2, rz: -0.32, show: 1, bg: "#A9C4E2" },
+  final: { x: 0.44, y: -0.05, s: 0.95, ry: 0.1, rz: -0.16, show: 1, bg: "#F7CEBC" },
 };
 
 const DETAIL: Record<DetailView, { s: number; y: number } | null> = {
@@ -51,35 +52,49 @@ function readScroll() {
   const hero = POSES["hero"] as Pose;
   const a: Pose = POSES[els[i]?.dataset["scene"] ?? "hero"] ?? hero;
   const b: Pose = POSES[els[Math.min(i + 1, els.length - 1)]?.dataset["scene"] ?? "hero"] ?? a;
-  return { a, b, f: ease(Math.min(Math.max(f, 0), 1)), activeName: els[f > 0.5 ? i + 1 : i]?.dataset["scene"] };
+  return { a, b, aEl: els[i], bEl: els[Math.min(i + 1, els.length - 1)], f: ease(Math.min(Math.max(f, 0), 1)), activeName: els[f > 0.5 ? i + 1 : i]?.dataset["scene"] };
+}
+
+function frameSlot(el: HTMLElement | undefined, pose: Pose, width: number, height: number, worldW: number, worldH: number) {
+  const slot = el?.querySelector<HTMLElement>("[data-product-slot]");
+  if (!el || !slot) return { x: pose.x * worldW / 2, y: pose.y, s: pose.s };
+  const r = slot.getBoundingClientRect();
+  const section = el.getBoundingClientRect();
+  const scaleH = (r.height / height * worldH) / 4.05;
+  const scaleW = (r.width / width * worldW) / 2.0;
+  return {
+    x: ((r.left + r.width / 2) / width - 0.5) * worldW,
+    y: -(r.top + r.height / 2 - section.top - section.height / 2) / height * worldH,
+    s: Math.min(scaleH, scaleW, pose.s),
+  };
 }
 
 function Rig() {
   const group = useRef<THREE.Group>(null);
   const inner = useRef<THREE.Group>(null);
   const { camera, viewport, size } = useThree();
+  const reduced = useReducedMotion();
   const variant = useAura((s) => variantById(s.variant));
   const pointer = useRef({ x: 0, y: 0 });
   const cur = useRef({ x: 0, y: 0, s: 1, ry: 0, rz: 0, show: 1, dx: 0, dy: 0 });
 
   useFrame((state, raw) => {
     const dt = Math.min(raw, 0.05);
-    const { a, b, f, activeName } = readScroll();
+    const { a, b, aEl, bEl, f, activeName } = readScroll();
     const st = auraStore.get();
     const mobile = size.width < 820;
-    const halfW = viewport.width / 2;
-
     const inViewer = activeName === "viewer" ? 1 : 0;
-    let tx = lerp(a.x, b.x, f) * halfW * (mobile ? 0.55 : 1);
-    let ty = lerp(a.y, b.y, f);
-    let ts = lerp(a.s, b.s, f) * (mobile ? 0.5 : 1);
+    const fa = frameSlot(aEl, a, size.width, size.height, viewport.width, viewport.height);
+    const fb = frameSlot(bEl, b, size.width, size.height, viewport.width, viewport.height);
+    const tx = lerp(fa.x, fb.x, f);
+    let ty = lerp(fa.y, fb.y, f);
+    let ts = lerp(fa.s, fb.s, f);
     const show = lerp(a.show, b.show, f);
     const d = DETAIL[st.detail];
     if (inViewer && d) {
-      ts = d.s * (mobile ? 0.7 : 1);
-      ty = d.y * (mobile ? 0.7 : 1);
+      ts *= d.s;
+      ty += d.y * ts;
     }
-    if (mobile && !inViewer) ty -= 1.9;
 
     // background
     tmpA.set(a.bg);
@@ -87,18 +102,18 @@ function Rig() {
     tmpA.lerp(tmpB, f);
     document.documentElement.style.setProperty("--scene-bg", `#${tmpA.getHexString()}`);
 
-    const k = 1 - Math.exp(-5 * dt);
+    const k = reduced ? 1 : 1 - Math.exp(-8 * dt);
     const c = cur.current;
     c.x = lerp(c.x, tx, k);
     c.y = lerp(c.y, ty, k);
-    c.s = lerp(c.s, ts * (0.001 + show), k);
+    c.s = lerp(c.s, ts * show, k);
     c.ry = lerp(c.ry, lerp(a.ry, b.ry, f), k);
     c.rz = lerp(c.rz, lerp(a.rz, b.rz, f), k);
     c.dx = lerp(c.dx, inViewer ? st.dragX : 0, 1 - Math.exp(-10 * dt));
     c.dy = lerp(c.dy, inViewer ? st.dragY : 0, 1 - Math.exp(-10 * dt));
 
     const t = state.clock.elapsedTime;
-    const idle = inViewer ? 0 : 1;
+    const idle = inViewer || reduced ? 0 : 1;
     if (group.current) {
       group.current.position.set(c.x, c.y + Math.sin(t * 0.9) * 0.03 * idle, 0);
       group.current.scale.setScalar(c.s);
