@@ -15,7 +15,7 @@ export const POSES: Record<string, Pose> = {
   reveal: { x: 0.36, y: -0.35, s: 0.72, ry: -0.15, rz: 0.06, show: 1, bg: "#F3EEDF" },
   viewer: { x: 0, y: 0, s: 0.95, ry: 0, rz: 0, show: 1, bg: "#F6C9B2" },
   form: { x: -0.42, y: 0, s: 0.95, ry: 0.3, rz: 0.1, show: 1, bg: "#CFE2C3" },
-  cap: { x: -0.42, y: -1.25, s: 1.3, ry: -0.25, rz: 0.04, show: 1, bg: "#BFD8B4" },
+  cap: { x: -0.42, y: -0.35, s: 1.08, ry: -0.25, rz: 0.04, show: 1, bg: "#BFD8B4" },
   ritual: { x: -0.42, y: 0.1, s: 1.0, ry: 0.4, rz: -0.06, show: 1, bg: "#E6EFDE" },
   collection: { x: 0, y: -6, s: 0.6, ry: 0.2, rz: 0, show: 0, bg: "#FBF6EE" },
   world: { x: 0, y: -6, s: 0.6, ry: 0.2, rz: 0, show: 0, bg: "#F7E3D3" },
