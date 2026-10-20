@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 /** Procedural AURA bottle. Origin at the base centre; total height ≈ 3.6. */
 export const BOTTLE_HEIGHT = 3.6;
@@ -12,7 +13,8 @@ function makeLabelTexture() {
   const c = document.createElement("canvas");
   c.width = 2048;
   c.height = 1024;
-  const g = c.getContext("2d")!;
+  const g = c.getContext("2d");
+  if (!g) return null;
   g.clearRect(0, 0, c.width, c.height);
   g.save();
   // u≈0.25 of the wrap faces the camera; text runs top→bottom like an embossed wordmark
@@ -22,7 +24,7 @@ function makeLabelTexture() {
   g.textBaseline = "middle";
   g.font = "600 330px 'Outfit', sans-serif";
   (g as CanvasRenderingContext2D & { letterSpacing?: string }).letterSpacing = "40px";
-  g.fillStyle = "rgba(255,255,255,0.55)";
+  g.fillStyle = "rgba(255,255,255,0.85)";
   g.fillText("AURA", 0, 0);
   g.restore();
   const t = new THREE.CanvasTexture(c);
@@ -36,6 +38,7 @@ function lathe(points: [number, number][], seg = 96) {
 }
 
 export function BottleMesh({ body, cap }: { body: string; cap: string }) {
+  const reduced = useReducedMotion();
   const bodyMat = useRef<THREE.MeshPhysicalMaterial>(null);
   const capMat = useRef<THREE.MeshPhysicalMaterial>(null);
   const target = useMemo(() => ({ body: new THREE.Color(body), cap: new THREE.Color(cap) }), [body, cap]);
@@ -80,13 +83,15 @@ export function BottleMesh({ body, cap }: { body: string; cap: string }) {
     if (!label || typeof document === "undefined" || !document.fonts) return;
     document.fonts.load("600 330px 'Outfit'").then(() => {
       const fresh = makeLabelTexture();
+      if (!fresh) return;
       label.image = fresh.image;
       label.needsUpdate = true;
+      fresh.dispose();
     });
   }, [label]);
 
   useFrame((_, d) => {
-    const k = 1 - Math.exp(-6 * Math.min(d, 0.05));
+    const k = reduced ? 1 : 1 - Math.exp(-6 * Math.min(d, 0.05));
     bodyMat.current?.color.lerp(target.body, k);
     capMat.current?.color.lerp(target.cap, k);
   });
@@ -99,7 +104,7 @@ export function BottleMesh({ body, cap }: { body: string; cap: string }) {
       {label && (
         <mesh position={[0, LABEL_Y0 + LABEL_H / 2, 0]} rotation-y={-Math.PI / 2}>
           <cylinderGeometry args={[R + 0.003, R + 0.003, LABEL_H, 96, 1, true]} />
-          <meshStandardMaterial map={label} transparent roughness={0.5} depthWrite={false} />
+          <meshBasicMaterial map={label} transparent depthWrite={false} toneMapped={false} />
         </mesh>
       )}
       {/* Satin steel collar */}

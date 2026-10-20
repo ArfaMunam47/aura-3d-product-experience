@@ -37,8 +37,13 @@ export function useAura<T>(sel: (s: State) => T): T {
   return useSyncExternalStore(auraStore.subscribe, () => sel(state), () => sel(state));
 }
 
-export const variantById = (id: VariantId) => VARIANTS.find((v) => v.id === id)!;
+export const variantById = (id: VariantId) => {
+  const variant = VARIANTS.find((v) => v.id === id);
+  if (variant) return variant;
+  return { id: "petal" as const, name: "Petal", mood: "Soft peach", body: "#F2BBA1", cap: "#F07868", swatch: "#F6C7AE" };
+};
 
 export function scrollToId(id: string) {
-  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.getElementById(id)?.scrollIntoView({ behavior: reduced ? "instant" : "smooth", block: "start" });
 }

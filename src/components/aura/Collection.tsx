@@ -5,6 +5,8 @@ import * as THREE from "three";
 import { BottleMesh } from "./Bottle";
 import { Studio } from "./Stage";
 import { VARIANTS, auraStore, scrollToId, useAura } from "@/lib/aura-store";
+import { Button } from "@/components/ui/button";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 const SLOTS = [
   { x: -4.6, z: -0.6, y: 0.15 },
@@ -15,22 +17,24 @@ const SLOTS = [
 
 function Item({ i, visible, hovered }: { i: number; visible: boolean; hovered: boolean }) {
   const ref = useRef<THREE.Group>(null);
-  const v = VARIANTS[i]!;
+  const v = VARIANTS[i];
+  const slot = SLOTS[i];
+  const reduced = useReducedMotion();
   const born = useRef<number | null>(null);
   const { size } = useThree();
   useFrame((s, d) => {
-    if (!ref.current) return;
+    if (!ref.current || !slot) return;
     const m = size.width < 640 ? 0.42 : 1;
     ref.current.scale.setScalar(size.width < 640 ? 0.55 : 1);
     if (visible && born.current === null) born.current = s.clock.elapsedTime;
     const age = born.current === null ? 0 : s.clock.elapsedTime - born.current - i * 0.15;
-    const p = Math.min(Math.max(age / 0.9, 0), 1);
+    const p = reduced ? 1 : Math.min(Math.max(age / 0.9, 0), 1);
     const e = 1 - Math.pow(1 - p, 3);
-    const slot = SLOTS[i]!;
-    ref.current.position.set(slot.x * m, slot.y - 1.8 + (1 - e) * -2.5 + (hovered ? 0.12 : 0), slot.z);
-    ref.current.rotation.y += (0.5 - i * 0.25 + (hovered ? 0.5 : 0) - ref.current.rotation.y) * (1 - Math.exp(-4 * d));
+    ref.current.position.set(slot.x * m, -1.8 * (size.width < 640 ? 0.55 : 1) + (1 - e) * -2.5 + (hovered ? 0.12 : 0), slot.z);
+    ref.current.rotation.y += (0.12 - i * 0.08 + (hovered ? 0.08 : 0) - ref.current.rotation.y) * (reduced ? 1 : 1 - Math.exp(-4 * Math.min(d, .05)));
     ref.current.visible = p > 0;
   });
+  if (!v || !slot) return null;
   return (
     <group ref={ref}>
       <BottleMesh body={v.body} cap={v.cap} />
@@ -68,7 +72,7 @@ export function Collection() {
       </div>
       <div className="grid grid-cols-4 gap-2">
         {VARIANTS.map((v, i) => (
-          <button
+          <Button variant="aura" size="aura"
             key={v.id}
             onMouseEnter={() => setHover(i)}
             onMouseLeave={() => setHover(-1)}
@@ -78,14 +82,14 @@ export function Collection() {
             aria-label={`Open ${v.name} in the bottle viewer`}
             className="group flex flex-col items-center gap-1 rounded-full py-2 text-center transition-colors focus-visible:outline-2 focus-visible:outline-ring"
           >
-            <span className="flex items-center gap-2 text-sm font-medium tracking-[0.2em] text-foreground uppercase">
-              <span className="size-2.5 rounded-full border border-foreground/30" style={{ background: v.swatch }} />
+            <span className="flex items-center gap-2 text-sm font-medium text-foreground uppercase">
+              <span className={`collection-swatch variant-${v.id}`} />
               {v.name}
             </span>
             <span className="text-xs text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
               {active === v.id ? "Currently selected" : "View this color →"}
             </span>
-          </button>
+          </Button>
         ))}
       </div>
     </div>
