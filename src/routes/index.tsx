@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { ArrowUpRight, RotateCcw, ArrowDown } from "lucide-react";
 import { Stage } from "@/components/aura/Stage";
 import { Collection } from "@/components/aura/Collection";
 import { VARIANTS, auraStore, scrollToId, useAura, variantById, type DetailView } from "@/lib/aura-store";
@@ -46,8 +48,8 @@ function AuraPage() {
       <Nav />
       <main className="relative z-20">
         <Hero />
-        <Reveal />
         <Viewer webgl={gl !== false} />
+        <Reveal />
         <Details />
         <section data-scene="collection" id="colors" className="scene flex-col justify-center gap-10 py-24">
           <div className="text-center">
@@ -59,7 +61,7 @@ function AuraPage() {
         <World />
         <Final />
       </main>
-      <Footer />
+
     </div>
   );
 }
@@ -80,7 +82,7 @@ function FallbackBottle() {
   const v = useAura((s) => variantById(s.variant));
   return (
     <div className="pointer-events-none fixed inset-0 z-10 flex items-center justify-end pr-[12vw]" aria-hidden>
-      <div className="fallback-bottle" style={{ background: v.body }} />
+      <div className={`fallback-bottle variant-${v.id}`}><span>AURA</span></div>
     </div>
   );
 }
@@ -90,17 +92,17 @@ function Nav() {
   return (
     <header className="fixed inset-x-0 top-0 z-40">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 md:px-10">
-        <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="wordmark text-lg text-foreground" aria-label="AURA, back to top">
+        <Button variant="aura" size="aura" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="wordmark text-lg text-foreground" aria-label="AURA, back to top">
           AURA
-        </button>
+        </Button>
         <ul className="hidden gap-9 text-[0.95rem] font-medium text-foreground/80 md:flex">
           {links.map(([l, id]) => (
             <li key={id}>
-              <button className="nav-link" onClick={() => scrollToId(id)}>{l}</button>
+              <Button variant="aura" size="aura" className="nav-link" onClick={() => scrollToId(id)}>{l}</Button>
             </li>
           ))}
         </ul>
-        <button className="btn-pill btn-pill-sm" onClick={() => scrollToId("bottle")}>Explore</button>
+        <Button variant="aura" size="aura" className="btn-pill btn-pill-sm" onClick={() => scrollToId("bottle")}>Explore</Button>
       </nav>
     </header>
   );
@@ -116,11 +118,11 @@ function Wave({ color = "var(--coral)" }: { color?: string }) {
 
 function Hero() {
   return (
-    <section data-scene="hero" className="scene on-blue">
+    <section data-scene="hero" className="scene on-blue campaign-scene">
       <Wave />
-      <div className="container-aura grid md:grid-cols-2">
+      <div className="container-aura campaign-grid">
         <div className="pt-24 md:pt-0">
-          <p className="eyebrow rise" style={{ animationDelay: "0.2s" }}>Introducing AURA</p>
+          <p className="eyebrow rise" style={{ animationDelay: "0.2s" }}>AURA — Everyday objects, reimagined</p>
           <h1 className="display-xl mt-6 rise" style={{ animationDelay: "0.35s" }}>
             carry a<br /><strong>little calm</strong>
           </h1>
@@ -128,15 +130,16 @@ function Hero() {
             Meet AURA. Everyday hydration, thoughtfully reimagined.
           </p>
           <div className="mt-10 flex flex-wrap gap-3 rise" style={{ animationDelay: "0.65s" }}>
-            <button className="btn-pill" onClick={() => scrollToId("discover")}>Discover AURA</button>
-            <button className="btn-ghost text-primary-foreground" style={{ borderColor: "color-mix(in oklab, var(--ivory) 60%, transparent)" }} onClick={() => scrollToId("bottle")}>Explore the bottle</button>
+            <Button variant="aura" size="aura" className="btn-pill" onClick={() => scrollToId("discover")}>Discover AURA</Button>
+            <Button variant="aura" size="aura" className="btn-ghost text-primary-foreground" style={{ borderColor: "color-mix(in oklab, var(--ivory) 60%, transparent)" }} onClick={() => scrollToId("bottle")}>Explore the bottle</Button>
           </div>
         </div>
+        <div data-product-slot className="campaign-product" aria-hidden />
       </div>
-      <button onClick={() => scrollToId("discover")} className="scroll-cue" aria-label="Scroll to the story">
-        <span>Scroll</span>
+      <Button variant="aura" size="aura" onClick={() => scrollToId("discover")} className="scroll-cue" aria-label="Scroll to the story">
+        <ArrowDown size={16} />
         <span className="scroll-cue-line" />
-      </button>
+      </Button>
     </section>
   );
 }
@@ -146,7 +149,7 @@ function Reveal() {
     <section data-scene="reveal" id="discover" className="scene tone-forest py-28">
       <div className="container-aura grid items-center gap-12 md:grid-cols-12 md:gap-8">
         <InView className="md:col-span-5 md:pr-6">
-          <p className="eyebrow">02 — Everyday refresh</p>
+          <p className="eyebrow">03 — Everyday refresh</p>
           <h2 className="display-lg mt-5">less noise,<br /><em>more refresh,</em><br />every day.</h2>
           <p className="lede mt-6 max-w-md">
             A reusable bottle made for the little rituals that make every day feel better — at your desk, on the trail, and everywhere in between.
@@ -194,7 +197,8 @@ function Viewer({ webgl }: { webgl: boolean }) {
   const details: [DetailView, string][] = [["full", "Full view"], ["cap", "Cap"], ["finish", "Finish"], ["base", "Base"]];
 
   return (
-    <section data-scene="viewer" id="bottle" className="scene">
+    <section data-scene="viewer" id="bottle" className={`scene viewer-scene variant-${variantId}`}>
+      <div className="viewer-ribbon" aria-hidden />
       <div
         className={`drag-surface ${dragging ? "is-dragging" : ""}`}
         onPointerDown={onDown}
@@ -204,44 +208,43 @@ function Viewer({ webgl }: { webgl: boolean }) {
         aria-label="Drag horizontally to rotate the bottle"
         role="application"
       />
-      <div className="container-aura pointer-events-none relative grid h-full gap-10 md:grid-cols-[1fr_1fr_18rem]">
-        <div className="pointer-events-auto self-start pt-28 md:self-center md:pt-0">
-          <p className="eyebrow">03 — Interactive</p>
+      <div className="container-aura pointer-events-none relative viewer-grid">
+        <div className="viewer-copy pointer-events-auto">
+          <p className="eyebrow">02 — Find your AURA</p>
           <h2 className="display-lg mt-5">your color,<br /><em>your rhythm</em></h2>
           <p className="lede mt-5 max-w-xs">One considered design. Four different moods.</p>
           <p className="mt-8 text-xs tracking-[0.25em] text-muted-foreground uppercase">
             {webgl ? (dragging ? "Rotating…" : "Drag to rotate · ↔") : "3D unavailable on this device"}
           </p>
         </div>
-        <div className="hidden md:block" />
-        <div className="glass-panel pointer-events-auto self-end mb-10 md:self-center md:mb-0">
+        <div data-product-slot className="viewer-product" aria-hidden />
+        <div className="viewer-controls pointer-events-auto">
           <p className="eyebrow">Color</p>
           <p className="mt-2 font-display text-3xl text-foreground" aria-live="polite">{v.name}</p>
           <p className="text-sm text-muted-foreground">{v.mood}</p>
           <div className="mt-5 flex gap-3" role="radiogroup" aria-label="Bottle color">
             {VARIANTS.map((x) => (
-              <button
+              <Button variant="aura" size="aura"
                 key={x.id}
                 role="radio"
                 aria-checked={x.id === variantId}
                 aria-label={x.name}
                 onClick={() => auraStore.set({ variant: x.id })}
-                className="swatch"
-                style={{ background: x.swatch }}
+                className={`swatch variant-${x.id}`}
               />
             ))}
           </div>
           <p className="eyebrow mt-7">Inspect</p>
           <div className="mt-3 grid grid-cols-2 gap-2">
             {details.map(([id, label]) => (
-              <button key={id} aria-pressed={detail === id} onClick={() => auraStore.set({ detail: id })} className="chip">
+              <Button variant="aura" size="aura" key={id} aria-pressed={detail === id} onClick={() => auraStore.set({ detail: id })} className="chip">
                 {label}
-              </button>
+              </Button>
             ))}
           </div>
-          <button className="btn-ghost mt-5 w-full justify-center" onClick={() => auraStore.set({ dragX: 0, dragY: 0, detail: "full" })}>
-            Reset view
-          </button>
+          <Button variant="aura" size="aura" className="btn-ghost mt-5 w-full justify-center" onClick={() => auraStore.set({ dragX: 0, dragY: 0, detail: "full" })}>
+            <RotateCcw size={14} /> Reset view
+          </Button>
         </div>
       </div>
     </section>
@@ -258,16 +261,17 @@ function Details() {
   return (
     <>
       {DETAIL_COPY.map((c, i) => (
-        <section key={c.scene} data-scene={c.scene} className="scene tone-forest">
-          <div className="container-aura grid md:grid-cols-2">
-            <InView className="relative hidden md:block">
+        <section key={c.scene} data-scene={c.scene} className="scene tone-forest detail-scene">
+          <div className="container-aura detail-grid">
+            <InView className="detail-product">
+              <div data-product-slot className="detail-slot" aria-hidden />
               <div className="leader">
                 <span className="leader-dot" />
                 <span className="leader-line" />
                 <span className="leader-label">{c.tag}</span>
               </div>
             </InView>
-            <InView className="pt-24 md:pt-0 md:pl-10">
+            <InView className="detail-copy">
               {i === 0 && <p className="eyebrow mb-8">04 — Details worth noticing</p>}
               <span className="font-display text-6xl font-extralight text-primary">{c.n}</span>
               <h3 className="display-md mt-3">{c.t}</h3>
@@ -304,30 +308,33 @@ function World() {
 
 function Final() {
   return (
-    <section data-scene="final" className="scene on-blue">
-      <Wave />
-      <div className="container-aura grid md:grid-cols-2">
-        <InView className="pt-24 md:pt-0">
-          <h2 className="display-lg max-w-xl">make room for your<br /><strong>everyday <span className="normal-case">AURA</span></strong></h2>
-          <p className="lede mt-5 max-w-sm">A thoughtful design for a ritual worth keeping.</p>
-          <button className="btn-pill btn-pill-lg mt-10" onClick={() => scrollToId("bottle")}>Explore AURA</button>
+    <section data-scene="final" className="scene closing-scene">
+      <div className="closing-ribbon" aria-hidden />
+      <div className="container-aura closing-grid">
+        <InView className="closing-copy">
+          <p className="eyebrow">A little more color. A little more you.</p>
+          <h2 className="display-lg mt-5">Make room for your<br /><strong>everyday <span className="normal-case">AURA.</span></strong></h2>
+          <p className="lede mt-5 max-w-sm">Thoughtful design. A little more color in every day.</p>
+          <Button variant="aura" size="aura" className="btn-pill btn-pill-lg mt-8" onClick={() => scrollToId("bottle")}>Find your AURA <ArrowUpRight /></Button>
         </InView>
+        <div data-product-slot className="closing-product" aria-hidden />
       </div>
+      <Footer />
     </section>
   );
 }
 
 function Footer() {
   return (
-    <footer className="relative z-40 bg-background">
+    <footer className="closing-footer relative z-40">
       <div className="container-aura flex flex-col items-center justify-between gap-6 py-10 md:flex-row">
         <span className="wordmark text-base text-foreground">AURA</span>
         <ul className="flex gap-8 text-sm text-muted-foreground">
           {([["Discover", "discover"], ["The Bottle", "bottle"], ["Colors", "colors"]] as const).map(([l, id]) => (
-            <li key={id}><button className="nav-link" onClick={() => scrollToId(id)}>{l}</button></li>
+            <li key={id}><Button variant="aura" size="aura" className="nav-link" onClick={() => scrollToId(id)}>{l}</Button></li>
           ))}
         </ul>
-        <span className="text-xs text-muted-foreground">A concept product experience.</span>
+        <span className="text-xs text-muted-foreground">AURA — A product design study</span>
       </div>
     </footer>
   );
