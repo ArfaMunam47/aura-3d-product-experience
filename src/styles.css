@@ -283,6 +283,13 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
 
 .stage-layer { z-index: 30; }
 .collection-swatch { width: 10px; height: 10px; border-radius: 50%; background: var(--variant-swatch); border: 1px solid var(--border); }
+.aura-nav { background: color-mix(in oklab, var(--scene-bg) 85%, transparent); backdrop-filter: blur(12px); }
+.no-webgl [data-product-slot] { display: flex; align-items: center; justify-content: center; }
+.no-webgl [data-product-slot]::after { content: 'AURA'; writing-mode: vertical-rl; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 600; color: var(--plum); background: var(--peach); width: 100px; height: 260px; border-radius: 40px 40px 20px 20px; box-shadow: var(--shadow-soft); }
+.fallback-collection { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; padding: 2rem 1.5rem; width: 100%; }
+.fallback-collection > button { display: flex; flex-direction: column; gap: 1.5rem; align-items: center; }
+.fallback-collection .fallback-bottle { display: block; }
+@media(max-width: 767px) { .fallback-collection { gap: .5rem; } .fallback-collection .fallback-bottle { width: 50px; height: 170px; } .fallback-collection .fallback-bottle span { font-size: 1.5rem; } }
 @media (max-width: 767px) and (max-height: 700px) {
  .campaign-scene { padding: 82px 0 20px; }
  .campaign-product { height: 240px; }

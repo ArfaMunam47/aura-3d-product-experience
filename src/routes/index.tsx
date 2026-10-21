@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { Component, useEffect, useRef, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight, RotateCcw, ArrowDown } from "lucide-react";
 import { Stage } from "@/components/aura/Stage";
@@ -39,11 +39,10 @@ function AuraPage() {
   useEffect(() => setGl(hasWebGL()), []);
 
   return (
-    <div className="aura-root">
+    <div className={`aura-root ${gl === false ? "no-webgl" : ""}`}>
       <div className="aura-bg" aria-hidden />
       <div className="aura-grain" aria-hidden />
-      {gl && <Stage />}
-      {gl === false && <FallbackBottle />}
+      {gl && <ProductBoundary onFailure={() => setGl(false)}><Stage /></ProductBoundary>}
       <Loader done={ready || gl === false} />
       <Nav />
       <main className="relative z-20">
@@ -56,7 +55,8 @@ function AuraPage() {
             <p className="eyebrow">05 — The collection</p>
             <h2 className="display-lg mt-4">four moods, <strong>one form</strong></h2>
           </div>
-          <Collection />
+          {gl && <ProductBoundary onFailure={() => setGl(false)}><Collection /></ProductBoundary>}
+          {gl === false && <div className="fallback-collection">{VARIANTS.map(v => <Button variant="aura" size="aura" key={v.id} onClick={() => { auraStore.set({ variant: v.id }); scrollToId("bottle"); }} className={`variant-${v.id}`}><span className="fallback-bottle"><span>AURA</span></span><span>{v.name}</span></Button>)}</div>}
         </section>
         <World />
         <Final />
@@ -78,21 +78,19 @@ function Loader({ done }: { done: boolean }) {
   );
 }
 
-function FallbackBottle() {
-  const v = useAura((s) => variantById(s.variant));
-  return (
-    <div className="pointer-events-none fixed inset-0 z-10 flex items-center justify-end pr-[12vw]" aria-hidden>
-      <div className={`fallback-bottle variant-${v.id}`}><span>AURA</span></div>
-    </div>
-  );
+class ProductBoundary extends Component<{ children: ReactNode; onFailure: () => void }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() { return { failed: true }; }
+  componentDidCatch() { this.props.onFailure(); }
+  render() { return this.state.failed ? null : this.props.children; }
 }
 
 function Nav() {
   const links: [string, string][] = [["Discover", "discover"], ["The Bottle", "bottle"], ["Colors", "colors"]];
   return (
-    <header className="fixed inset-x-0 top-0 z-40">
+    <header className="aura-nav fixed inset-x-0 top-0 z-40">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 md:px-10">
-        <Button variant="aura" size="aura" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="wordmark text-lg text-foreground" aria-label="AURA, back to top">
+        <Button variant="aura" size="aura" onClick={() => window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" })} className="wordmark text-lg text-foreground" aria-label="AURA, back to top">
           AURA
         </Button>
         <ul className="hidden gap-9 text-[0.95rem] font-medium text-foreground/80 md:flex">
