@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Component, useEffect, useRef, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, RotateCcw, ArrowDown } from "lucide-react";
+import { ArrowUpRight, RotateCcw, ArrowDown, ArrowUp } from "lucide-react";
 import { Stage } from "@/components/aura/Stage";
 import { Collection } from "@/components/aura/Collection";
 import { VARIANTS, auraStore, scrollToId, useAura, variantById, type DetailView } from "@/lib/aura-store";
@@ -325,17 +325,46 @@ function Final() {
 }
 
 function Footer() {
+  const backToTop = () => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: reduced ? "instant" : "smooth" });
+  };
   return (
-    <footer className="closing-footer relative z-40">
-      <div className="container-aura flex flex-col items-center justify-between gap-6 py-10 md:flex-row">
-        <span className="wordmark text-base text-foreground">AURA</span>
-        <ul className="flex gap-8 text-sm text-muted-foreground">
-          {([["Discover", "discover"], ["The Bottle", "bottle"], ["Colors", "colors"]] as const).map(([l, id]) => (
-            <li key={id}><Button variant="aura" size="aura" className="nav-link" onClick={() => scrollToId(id)}>{l}</Button></li>
-          ))}
-        </ul>
-        <span className="text-xs text-muted-foreground">AURA — A product design study</span>
+    <footer className="closing-footer relative z-40 overflow-hidden">
+      <div className="container-aura footer-grid">
+        <div className="footer-brand">
+          <span className="wordmark text-2xl text-foreground">AURA</span>
+          <p className="footer-tagline">Carry a little calm, wherever the day takes you.</p>
+        </div>
+        <nav className="footer-col" aria-label="Explore AURA">
+          <p className="eyebrow">explore</p>
+          <ul>
+            <li><Button variant="aura" size="aura" className="footer-link" onClick={() => scrollToId("discover")}>Discover</Button></li>
+            <li><Button variant="aura" size="aura" className="footer-link" onClick={() => scrollToId("bottle")}>The Bottle</Button></li>
+            <li><Button variant="aura" size="aura" className="footer-link" onClick={() => scrollToId("colors")}>Colors</Button></li>
+            <li><Button variant="aura" size="aura" className="footer-link" onClick={backToTop}>Back to top <ArrowUp size={14} /></Button></li>
+          </ul>
+        </nav>
+        <div className="footer-col">
+          <p className="eyebrow">the colors</p>
+          <ul>
+            {VARIANTS.map((v) => (
+              <li key={v.id}>
+                <Button variant="aura" size="aura" className={`footer-color-btn variant-${v.id}`} onClick={() => { auraStore.set({ variant: v.id }); scrollToId("bottle"); }}>
+                  <span className="swatch" aria-hidden />
+                  <span>{v.name}</span>
+                  <span className="footer-mood">{v.mood}</span>
+                </Button>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
+      <div className="container-aura footer-bar">
+        <span>© 2026 AURA — a product design study</span>
+        <span>thoughtful design, in four colors</span>
+      </div>
+      <div className="footer-giant" aria-hidden>AURA</div>
     </footer>
   );
 }
