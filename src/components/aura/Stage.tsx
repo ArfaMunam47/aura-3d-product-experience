@@ -59,12 +59,11 @@ function frameSlot(el: HTMLElement | undefined, pose: Pose, width: number, heigh
   const slot = el?.querySelector<HTMLElement>("[data-product-slot]");
   if (!el || !slot) return { x: pose.x * worldW / 2, y: pose.y, s: pose.s };
   const r = slot.getBoundingClientRect();
-  const section = el.getBoundingClientRect();
   const scaleH = (r.height / height * worldH) / 4.05;
   const scaleW = (r.width / width * worldW) / 2.0;
   return {
     x: ((r.left + r.width / 2) / width - 0.5) * worldW,
-    y: -(r.top + r.height / 2 - section.top - section.height / 2) / height * worldH,
+    y: -(r.top + r.height / 2 - height / 2) / height * worldH,
     s: Math.min(scaleH, scaleW, pose.s),
   };
 }
@@ -82,7 +81,6 @@ function Rig() {
     const dt = Math.min(raw, 0.05);
     const { a, b, aEl, bEl, f, activeName } = readScroll();
     const st = auraStore.get();
-    const mobile = size.width < 820;
     const inViewer = activeName === "viewer" ? 1 : 0;
     const fa = frameSlot(aEl, a, size.width, size.height, viewport.width, viewport.height);
     const fb = frameSlot(bEl, b, size.width, size.height, viewport.width, viewport.height);
@@ -115,6 +113,7 @@ function Rig() {
     const t = state.clock.elapsedTime;
     const idle = inViewer || reduced ? 0 : 1;
     if (group.current) {
+      group.current.visible = show > 0.08;
       group.current.position.set(c.x, c.y + Math.sin(t * 0.9) * 0.03 * idle, 0);
       group.current.scale.setScalar(c.s);
       group.current.rotation.set(c.dy, 0, c.rz + Math.sin(t * 0.6) * 0.015 * idle);

@@ -39,6 +39,7 @@ function lathe(points: [number, number][], seg = 96) {
 
 export function BottleMesh({ body, cap }: { body: string; cap: string }) {
   const reduced = useReducedMotion();
+  const initialColors = useRef({ body, cap });
   const bodyMat = useRef<THREE.MeshPhysicalMaterial>(null);
   const capMat = useRef<THREE.MeshPhysicalMaterial>(null);
   const target = useMemo(() => ({ body: new THREE.Color(body), cap: new THREE.Color(cap) }), [body, cap]);
@@ -99,7 +100,7 @@ export function BottleMesh({ body, cap }: { body: string; cap: string }) {
   return (
     <group>
       <mesh geometry={bodyGeo} castShadow receiveShadow>
-        <meshPhysicalMaterial ref={bodyMat} color={body} roughness={0.38} metalness={0} clearcoat={0.35} clearcoatRoughness={0.45} />
+        <meshPhysicalMaterial ref={bodyMat} color={initialColors.current.body} roughness={0.38} metalness={0} clearcoat={0.35} clearcoatRoughness={0.45} />
       </mesh>
       {label && (
         <mesh position={[0, LABEL_Y0 + LABEL_H / 2, 0]} rotation-y={-Math.PI / 2}>
@@ -115,7 +116,7 @@ export function BottleMesh({ body, cap }: { body: string; cap: string }) {
       {/* Cap */}
       <group position={[0, 3.12, 0]}>
         <mesh geometry={capGeo} castShadow>
-          <meshPhysicalMaterial ref={capMat} color={cap} roughness={0.5} clearcoat={0.2} />
+          <meshPhysicalMaterial ref={capMat} color={initialColors.current.cap} roughness={0.5} clearcoat={0.2} />
         </mesh>
         {/* Carry loop */}
         <mesh position={[0, 0.5, 0]} castShadow>
