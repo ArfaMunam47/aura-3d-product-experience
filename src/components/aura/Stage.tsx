@@ -82,7 +82,6 @@ function Rig() {
     const dt = Math.min(raw, 0.05);
     const { a, b, aEl, bEl, f, activeName } = readScroll();
     const st = auraStore.get();
-    const mobile = size.width < 820;
     const inViewer = activeName === "viewer" ? 1 : 0;
     const fa = frameSlot(aEl, a, size.width, size.height, viewport.width, viewport.height);
     const fb = frameSlot(bEl, b, size.width, size.height, viewport.width, viewport.height);

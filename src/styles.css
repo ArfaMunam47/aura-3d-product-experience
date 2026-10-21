@@ -116,7 +116,7 @@
 html { scroll-behavior: smooth; }
 body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
 
-@layer components {
+
   .aura-root { position: relative; }
   .aura-bg { position: fixed; inset: 0; z-index: 0; background: var(--scene-bg); }
   .aura-grain { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .18; mix-blend-mode: multiply;
@@ -173,13 +173,13 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
   .aura-loader.is-done { opacity: 0; visibility: hidden; }
   .aura-loader-bar { animation: load 1.2s ease-in-out infinite; }
   .fallback-bottle { width: 9rem; height: 26rem; border-radius: 4rem 4rem 2rem 2rem; box-shadow: inset -20px 0 40px oklch(0 0 0 / .12), var(--shadow-soft); }
-}
+
 @keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
 @keyframes cue { 0%,100% { transform: scaleY(.3); } 50% { transform: scaleY(1); } }
 @keyframes load { from { transform: translateX(-100%); } to { transform: translateX(200%); } }
 @media (prefers-reduced-motion: reduce) { .rise, .inview { animation: none; opacity: 1; transform: none; transition: none; } html { scroll-behavior: auto; } }
 .stage-layer { z-index: 10; }
-@layer components {
+
   .reveal-frame { position: relative; aspect-ratio: 4/5; max-height: 78vh; margin-left: auto; width: 100%; max-width: 34rem; border-radius: 2rem; overflow: hidden; box-shadow: var(--shadow-soft); }
   @media (min-width: 768px) { .reveal-frame { aspect-ratio: 5/6; } }
   .reveal-frame img { width: 100%; height: 100%; object-fit: cover; }
@@ -189,10 +189,10 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
   .reveal-meta div { display: flex; flex-direction: column; gap: .2rem; }
   .reveal-meta-k { font-family: var(--font-display); font-size: 1.5rem; color: var(--forest); font-weight: 500; }
   .reveal-meta-v { font-size: .85rem; color: var(--muted-foreground); }
-}
+
 
 /* Campaign framing is shared with the scroll rig through product slots. */
-@layer components {
+
   .campaign-scene { min-height: 92svh; }
   .campaign-grid, .closing-grid { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 2rem; }
   .campaign-product { height: 74svh; min-height: 360px; }
@@ -229,7 +229,7 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
   .fallback-bottle { position: relative; width: 100px; height: 290px; background: var(--variant-swatch); border-radius: 42px 42px 18px 18px; }
   .fallback-bottle::before { content: ''; position: absolute; left: 25%; right: 25%; height: 44px; top: -24px; background: var(--plum); border-radius: 8px; }
   .fallback-bottle span { position: absolute; left: 34%; top: 28%; writing-mode: vertical-rl; font-weight: 600; font-size: 2.3rem; color: var(--plum); }
-}
+
 @media (min-width: 1600px) {
   .display-xl { font-size: 6rem; }
   .display-lg { font-size: 4.6rem; }
@@ -279,4 +279,16 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .aura-loader.is-done { display: none; }
+}
+
+.stage-layer { z-index: 30; }
+.collection-swatch { width: 10px; height: 10px; border-radius: 50%; background: var(--variant-swatch); border: 1px solid var(--border); }
+@media (max-width: 767px) and (max-height: 700px) {
+ .campaign-scene { padding: 82px 0 20px; }
+ .campaign-product { height: 240px; }
+ .campaign-grid { gap: 10px; }
+ .campaign-grid .display-xl { font-size: 2.7rem; margin-top: 12px; }
+ .campaign-grid .lede { margin-top: 12px; }
+ .campaign-grid .mt-10 { margin-top: 16px; }
+ .campaign-grid .btn-pill, .campaign-grid .btn-ghost { padding: 10px 16px; font-size: .8rem; }
 }

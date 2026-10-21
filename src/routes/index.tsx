@@ -179,6 +179,7 @@ function Viewer({ webgl }: { webgl: boolean }) {
   const [dragging, setDragging] = useState(false);
 
   const onDown = (e: React.PointerEvent) => {
+    if (!webgl || e.button !== 0) return;
     const s = auraStore.get();
     drag.current = { x: e.clientX, y: e.clientY, bx: s.dragX, by: s.dragY };
     setDragging(true);
@@ -205,6 +206,7 @@ function Viewer({ webgl }: { webgl: boolean }) {
         onPointerMove={onMove}
         onPointerUp={onUp}
         onPointerCancel={onUp}
+        onLostPointerCapture={onUp}
         aria-label="Drag horizontally to rotate the bottle"
         role="application"
       />
@@ -254,7 +256,7 @@ function Viewer({ webgl }: { webgl: boolean }) {
 const DETAIL_COPY = [
   { scene: "form", n: "01", t: <>considered <strong>form</strong></>, d: "Clean lines. Balanced proportions. A shape designed to feel natural in your hand.", tag: "Silhouette" },
   { scene: "cap", n: "02", t: <>the little <strong>details</strong></>, d: "From the cap to the finish, every element deserves attention.", tag: "Cap & carry loop" },
-  { scene: "ritual", n: "03", t: <>made for <strong>everyday rituals</strong></>, d: "A considered companion for work, study, travel, and everyday moments.", tag: "Weighted base" },
+  { scene: "ritual", n: "03", t: <>made for <strong>everyday rituals</strong></>, d: "A considered companion for work, study, travel, and everyday moments.", tag: "Base & balance" },
 ];
 
 function Details() {
