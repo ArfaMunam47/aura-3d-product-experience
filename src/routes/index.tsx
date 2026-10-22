@@ -143,29 +143,64 @@ function Hero() {
   );
 }
 
+const RITUALS: [string, string, string][] = [
+  ["01", "morning", "the first pour"],
+  ["02", "midday", "a quiet desk-side refill"],
+  ["03", "evening", "rinse, rest, repeat"],
+];
+
 function Reveal() {
   return (
-    <section data-scene="reveal" id="discover" className="scene tone-forest py-28">
-      <div className="container-aura grid items-center gap-12 md:grid-cols-12 md:gap-8">
-        <InView className="md:col-span-5 md:pr-6">
+    <section data-scene="reveal" id="discover" className="scene tone-forest reveal-scene">
+      <div className="container-aura relative reveal-grid">
+        <InView className="reveal-copy">
           <p className="eyebrow">03 — Everyday refresh</p>
           <h2 className="display-lg mt-5">less noise,<br /><em>more refresh,</em><br />every day.</h2>
           <p className="lede mt-6 max-w-md">
             A reusable bottle made for the little rituals that make every day feel better — at your desk, on the trail, and everywhere in between.
           </p>
-          <div className="reveal-meta mt-10">
-            <div><span className="reveal-meta-k">Reusable</span><span className="reveal-meta-v">every day</span></div>
-            <div><span className="reveal-meta-k">Four</span><span className="reveal-meta-v">calm colors</span></div>
-            <div><span className="reveal-meta-k">One</span><span className="reveal-meta-v">considered form</span></div>
+          <div className="reveal-rituals mt-10">
+            {RITUALS.map(([n, t, d]) => (
+              <div className="reveal-ritual" key={n}>
+                <span className="reveal-ritual-n">{n}</span>
+                <span className="reveal-ritual-t">{t}</span>
+                <span className="reveal-ritual-d">{d}</span>
+              </div>
+            ))}
           </div>
         </InView>
-        <InView className="relative md:col-span-7">
-          <div className="reveal-frame">
-            <img src={landscapeImg} alt="Misty green mountain valley at sunrise" loading="lazy" width={1024} height={1280} />
-            <div className="reveal-ground" aria-hidden />
-            <span className="reveal-caption">Fresh air, carried with you</span>
+        <InView className="reveal-collage">
+          <span className="reveal-num" aria-hidden>03</span>
+          <figure className="reveal-main">
+            <img src={stillImg} alt="Morning light on a sunlit ledge with a ceramic cup, an open notebook and eucalyptus" loading="lazy" width={1024} height={1280} />
+            <span className="reveal-tape">morning light, kept close</span>
+            <span className="reveal-side" aria-hidden>everyday refresh</span>
+          </figure>
+          <figure className="reveal-inset">
+            <img src={rippleImg} alt="Rippling water catching the warm light of a pastel sky" loading="lazy" width={1024} height={1024} />
+          </figure>
+          <div className="reveal-badge" aria-hidden>
+            <svg viewBox="0 0 100 100">
+              <defs>
+                <path id="badge-arc" d="M50,50 m-35,0 a35,35 0 1,1 70,0 a35,35 0 1,1 -70,0" />
+              </defs>
+              <text className="reveal-badge-text">
+                <textPath href="#badge-arc">more color in every day · </textPath>
+              </text>
+            </svg>
+            <span className="reveal-badge-core">✺</span>
           </div>
         </InView>
+      </div>
+      <div className="reveal-marquee" aria-hidden>
+        <div className="reveal-marquee-track">
+          {["less noise", "more refresh", "every day", "carry a little calm"].map((w) => (
+            <span key={w}>{w} <i>·</i></span>
+          ))}
+          {["less noise", "more refresh", "every day", "carry a little calm"].map((w) => (
+            <span key={`${w}-2`} aria-hidden>{w} <i>·</i></span>
+          ))}
+        </div>
       </div>
     </section>
   );
