@@ -6,7 +6,8 @@ import { Stage } from "@/components/aura/Stage";
 import { Collection } from "@/components/aura/Collection";
 import { VARIANTS, auraStore, scrollToId, useAura, variantById, type DetailView } from "@/lib/aura-store";
 import worldImg from "@/assets/aura-world.jpg";
-import landscapeImg from "@/assets/aura-landscape.jpg";
+import stillImg from "@/assets/aura-still.jpg";
+import rippleImg from "@/assets/aura-ripple.jpg";
 import fieldImg from "@/assets/aura-field.jpg";
 
 export const Route = createFileRoute("/")({
