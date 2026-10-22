@@ -6,7 +6,8 @@ import { Stage } from "@/components/aura/Stage";
 import { Collection } from "@/components/aura/Collection";
 import { VARIANTS, auraStore, scrollToId, useAura, variantById, type DetailView } from "@/lib/aura-store";
 import worldImg from "@/assets/aura-world.jpg";
-import landscapeImg from "@/assets/aura-landscape.jpg";
+import stillImg from "@/assets/aura-still.jpg";
+import rippleImg from "@/assets/aura-ripple.jpg";
 import fieldImg from "@/assets/aura-field.jpg";
 
 export const Route = createFileRoute("/")({
@@ -142,29 +143,65 @@ function Hero() {
   );
 }
 
+const RITUALS: [string, string, string][] = [
+  ["01", "morning", "the first pour"],
+  ["02", "midday", "a quiet desk-side refill"],
+  ["03", "evening", "rinse, rest, repeat"],
+];
+
 function Reveal() {
   return (
-    <section data-scene="reveal" id="discover" className="scene tone-forest py-28">
-      <div className="container-aura grid items-center gap-12 md:grid-cols-12 md:gap-8">
-        <InView className="md:col-span-5 md:pr-6">
+    <section data-scene="reveal" id="discover" className="scene tone-forest reveal-scene">
+      <div className="container-aura relative reveal-grid">
+        <InView className="reveal-copy">
           <p className="eyebrow">03 — Everyday refresh</p>
           <h2 className="display-lg mt-5">less noise,<br /><em>more refresh,</em><br />every day.</h2>
           <p className="lede mt-6 max-w-md">
             A reusable bottle made for the little rituals that make every day feel better — at your desk, on the trail, and everywhere in between.
           </p>
-          <div className="reveal-meta mt-10">
-            <div><span className="reveal-meta-k">Reusable</span><span className="reveal-meta-v">every day</span></div>
-            <div><span className="reveal-meta-k">Four</span><span className="reveal-meta-v">calm colors</span></div>
-            <div><span className="reveal-meta-k">One</span><span className="reveal-meta-v">considered form</span></div>
+          <div className="reveal-rituals mt-10">
+            {RITUALS.map(([n, t, d]) => (
+              <div className="reveal-ritual" key={n}>
+                <span className="reveal-ritual-n">{n}</span>
+                <span className="reveal-ritual-t">{t}</span>
+                <span className="reveal-ritual-d">{d}</span>
+              </div>
+            ))}
           </div>
         </InView>
-        <InView className="relative md:col-span-7">
-          <div className="reveal-frame">
-            <img src={landscapeImg} alt="Misty green mountain valley at sunrise" loading="lazy" width={1024} height={1280} />
-            <div className="reveal-ground" aria-hidden />
-            <span className="reveal-caption">Fresh air, carried with you</span>
+        <InView className="reveal-collage">
+          <span className="reveal-num" aria-hidden>03</span>
+          <figure className="reveal-main">
+            <img src={stillImg} alt="Morning light on a sunlit ledge with a ceramic cup, an open notebook and eucalyptus" loading="lazy" width={1024} height={1280} />
+            <span className="reveal-tape">morning light, kept close</span>
+            <span className="reveal-side" aria-hidden>everyday refresh</span>
+          </figure>
+          <figure className="reveal-inset">
+            <img src={rippleImg} alt="Rippling water catching the warm light of a pastel sky" loading="lazy" width={1024} height={1024} />
+          </figure>
+          <div className="reveal-badge" aria-hidden>
+            <svg viewBox="0 0 100 100">
+              <defs>
+                <path id="badge-arc" d="M50,50 m-35,0 a35,35 0 1,1 70,0 a35,35 0 1,1 -70,0" />
+              </defs>
+              <text className="reveal-badge-text">
+                <textPath href="#badge-arc">more color in every day · </textPath>
+              </text>
+            </svg>
+            <span className="reveal-badge-core">✺</span>
           </div>
         </InView>
+      </div>
+      <div className="reveal-marquee" aria-hidden>
+        <div className="reveal-marquee-track">
+          {[0, 1].map((half) => (
+            <div className="reveal-marquee-group" key={half} aria-hidden={half === 1}>
+              {["less noise", "more refresh", "every day", "carry a little calm"].map((w) => (
+                <span key={w}>{w} <i>·</i></span>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -261,7 +298,7 @@ function Details() {
   return (
     <>
       {DETAIL_COPY.map((c, i) => (
-        <section key={c.scene} data-scene={c.scene} className="scene tone-forest detail-scene">
+        <section key={c.scene} data-scene={c.scene} id={i === 0 ? "details" : undefined} className="scene tone-forest detail-scene">
           <div className="container-aura detail-grid">
             <InView className="detail-product">
               <div data-product-slot className="detail-slot" aria-hidden />
@@ -286,7 +323,7 @@ function Details() {
 
 function World() {
   return (
-    <section data-scene="world" className="scene tone-forest">
+    <section data-scene="world" id="world" className="scene tone-forest">
       <div className="container-aura grid items-center gap-10 md:grid-cols-[1.15fr_1fr]">
         <InView className="relative h-[70vh] min-h-[420px]">
           <div className="photo absolute left-0 top-0 h-[72%] w-[58%]">
@@ -329,12 +366,26 @@ function Footer() {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.scrollTo({ top: 0, behavior: reduced ? "instant" : "smooth" });
   };
+  const [joined, setJoined] = useState(false);
+  const chapters: [string, string, string][] = [
+    ["02", "The bottle", "bottle"],
+    ["03", "The story", "discover"],
+    ["04", "Details", "details"],
+    ["06", "In your world", "world"],
+  ];
   return (
     <footer className="closing-footer relative z-40 overflow-hidden">
       <div className="container-aura footer-grid">
         <div className="footer-brand">
           <span className="wordmark text-2xl text-foreground">AURA</span>
           <p className="footer-tagline">Carry a little calm, wherever the day takes you.</p>
+          <form className="footer-news" onSubmit={(e) => { e.preventDefault(); setJoined(true); }}>
+            <input type="email" required placeholder="you@example.com" aria-label="Email address" />
+            <Button variant="aura" size="aura" type="submit" className="chip">Join</Button>
+          </form>
+          <p className="footer-note" role="status">
+            {joined ? "Thanks — AURA is a design study, so nothing is sent." : "A quiet note from the studio, now and then."}
+          </p>
         </div>
         <nav className="footer-col" aria-label="Explore AURA">
           <p className="eyebrow">explore</p>
@@ -343,6 +394,18 @@ function Footer() {
             <li><Button variant="aura" size="aura" className="footer-link" onClick={() => scrollToId("bottle")}>The Bottle</Button></li>
             <li><Button variant="aura" size="aura" className="footer-link" onClick={() => scrollToId("colors")}>Colors</Button></li>
             <li><Button variant="aura" size="aura" className="footer-link" onClick={backToTop}>Back to top <ArrowUp size={14} /></Button></li>
+          </ul>
+        </nav>
+        <nav className="footer-col" aria-label="The experience, chapter by chapter">
+          <p className="eyebrow">the experience</p>
+          <ul>
+            {chapters.map(([n, label, id]) => (
+              <li key={id}>
+                <Button variant="aura" size="aura" className="footer-link" onClick={() => scrollToId(id)}>
+                  <span className="footer-idx">{n}</span>{label}
+                </Button>
+              </li>
+            ))}
           </ul>
         </nav>
         <div className="footer-col">
@@ -363,6 +426,7 @@ function Footer() {
       <div className="container-aura footer-bar">
         <span>© 2026 AURA — a product design study</span>
         <span>thoughtful design, in four colors</span>
+        <span>stills on this page are AI-rendered</span>
       </div>
       <div className="footer-giant" aria-hidden>AURA</div>
     </footer>
