@@ -297,7 +297,7 @@ function Details() {
   return (
     <>
       {DETAIL_COPY.map((c, i) => (
-        <section key={c.scene} data-scene={c.scene} className="scene tone-forest detail-scene">
+        <section key={c.scene} data-scene={c.scene} id={i === 0 ? "details" : undefined} className="scene tone-forest detail-scene">
           <div className="container-aura detail-grid">
             <InView className="detail-product">
               <div data-product-slot className="detail-slot" aria-hidden />
@@ -322,7 +322,7 @@ function Details() {
 
 function World() {
   return (
-    <section data-scene="world" className="scene tone-forest">
+    <section data-scene="world" id="world" className="scene tone-forest">
       <div className="container-aura grid items-center gap-10 md:grid-cols-[1.15fr_1fr]">
         <InView className="relative h-[70vh] min-h-[420px]">
           <div className="photo absolute left-0 top-0 h-[72%] w-[58%]">
