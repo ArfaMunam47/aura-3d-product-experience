@@ -365,12 +365,26 @@ function Footer() {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.scrollTo({ top: 0, behavior: reduced ? "instant" : "smooth" });
   };
+  const [joined, setJoined] = useState(false);
+  const chapters: [string, string, string][] = [
+    ["02", "The bottle", "bottle"],
+    ["03", "The story", "discover"],
+    ["04", "Details", "details"],
+    ["06", "In your world", "world"],
+  ];
   return (
     <footer className="closing-footer relative z-40 overflow-hidden">
       <div className="container-aura footer-grid">
         <div className="footer-brand">
           <span className="wordmark text-2xl text-foreground">AURA</span>
           <p className="footer-tagline">Carry a little calm, wherever the day takes you.</p>
+          <form className="footer-news" onSubmit={(e) => { e.preventDefault(); setJoined(true); }}>
+            <input type="email" required placeholder="you@example.com" aria-label="Email address" />
+            <Button variant="aura" size="aura" type="submit" className="chip">Join</Button>
+          </form>
+          <p className="footer-note" role="status">
+            {joined ? "Thanks — AURA is a design study, so nothing is sent." : "A quiet note from the studio, now and then."}
+          </p>
         </div>
         <nav className="footer-col" aria-label="Explore AURA">
           <p className="eyebrow">explore</p>
@@ -379,6 +393,18 @@ function Footer() {
             <li><Button variant="aura" size="aura" className="footer-link" onClick={() => scrollToId("bottle")}>The Bottle</Button></li>
             <li><Button variant="aura" size="aura" className="footer-link" onClick={() => scrollToId("colors")}>Colors</Button></li>
             <li><Button variant="aura" size="aura" className="footer-link" onClick={backToTop}>Back to top <ArrowUp size={14} /></Button></li>
+          </ul>
+        </nav>
+        <nav className="footer-col" aria-label="The experience, chapter by chapter">
+          <p className="eyebrow">the experience</p>
+          <ul>
+            {chapters.map(([n, label, id]) => (
+              <li key={id}>
+                <Button variant="aura" size="aura" className="footer-link" onClick={() => scrollToId(id)}>
+                  <span className="footer-idx">{n}</span>{label}
+                </Button>
+              </li>
+            ))}
           </ul>
         </nav>
         <div className="footer-col">
@@ -399,6 +425,7 @@ function Footer() {
       <div className="container-aura footer-bar">
         <span>© 2026 AURA — a product design study</span>
         <span>thoughtful design, in four colors</span>
+        <span>stills on this page are AI-rendered</span>
       </div>
       <div className="footer-giant" aria-hidden>AURA</div>
     </footer>
