@@ -194,11 +194,12 @@ function Reveal() {
       </div>
       <div className="reveal-marquee" aria-hidden>
         <div className="reveal-marquee-track">
-          {["less noise", "more refresh", "every day", "carry a little calm"].map((w) => (
-            <span key={w}>{w} <i>·</i></span>
-          ))}
-          {["less noise", "more refresh", "every day", "carry a little calm"].map((w) => (
-            <span key={`${w}-2`} aria-hidden>{w} <i>·</i></span>
+          {[0, 1].map((half) => (
+            <div className="reveal-marquee-group" key={half} aria-hidden={half === 1}>
+              {["less noise", "more refresh", "every day", "carry a little calm"].map((w) => (
+                <span key={w}>{w} <i>·</i></span>
+              ))}
+            </div>
           ))}
         </div>
       </div>

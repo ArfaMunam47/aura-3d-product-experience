@@ -180,15 +180,34 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
 @media (prefers-reduced-motion: reduce) { .rise, .inview { animation: none; opacity: 1; transform: none; transition: none; } html { scroll-behavior: auto; } }
 .stage-layer { z-index: 10; }
 
-  .reveal-frame { position: relative; aspect-ratio: 4/5; max-height: 78vh; margin-left: auto; width: 100%; max-width: 34rem; border-radius: 2rem; overflow: hidden; box-shadow: var(--shadow-soft); }
-  @media (min-width: 768px) { .reveal-frame { aspect-ratio: 5/6; } }
-  .reveal-frame img { width: 100%; height: 100%; object-fit: cover; }
-  .reveal-ground { position: absolute; inset: auto 0 0 0; height: 35%; background: linear-gradient(to top, color-mix(in oklab, var(--forest) 35%, transparent), transparent); }
-  .reveal-caption { position: absolute; left: 1.5rem; bottom: 1.5rem; font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; font-weight: 600; color: var(--ivory); }
-  .reveal-meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; max-width: 28rem; border-top: 1px solid color-mix(in oklab, var(--forest) 25%, transparent); padding-top: 1.25rem; }
-  .reveal-meta div { display: flex; flex-direction: column; gap: .2rem; }
-  .reveal-meta-k { font-family: var(--font-display); font-size: 1.5rem; color: var(--forest); font-weight: 500; }
-  .reveal-meta-v { font-size: .85rem; color: var(--muted-foreground); }
+  /* 03 — Everyday refresh: editorial spread */
+  .reveal-scene { display: flex; flex-direction: column; justify-content: center; padding: 5rem 0 0; }
+  .reveal-grid { display: grid; grid-template-columns: 5fr 7fr; gap: 3.5rem; align-items: center; }
+  .reveal-rituals { display: flex; flex-direction: column; max-width: 28rem; }
+  .reveal-ritual { display: grid; grid-template-columns: 2.2rem 5.5rem 1fr; align-items: baseline; gap: .75rem; padding: .8rem 0; border-top: 1px solid color-mix(in oklab, var(--forest) 22%, transparent); }
+  .reveal-ritual:last-child { border-bottom: 1px solid color-mix(in oklab, var(--forest) 22%, transparent); }
+  .reveal-ritual-n { font-family: var(--font-display); font-size: .8rem; color: var(--coral); font-weight: 600; }
+  .reveal-ritual-t { font-weight: 600; font-size: .95rem; }
+  .reveal-ritual-d { font-size: .85rem; color: var(--muted-foreground); }
+  .reveal-collage { position: relative; }
+  .reveal-num { position: absolute; top: -3.5rem; right: -1rem; z-index: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(9rem, 20vw, 19rem); line-height: .8; color: transparent; -webkit-text-stroke: 1.5px color-mix(in oklab, var(--forest) 28%, transparent); pointer-events: none; user-select: none; }
+  .reveal-main { position: relative; z-index: 1; margin-left: auto; width: min(100%, 34rem); aspect-ratio: 4/5; max-height: 72vh; border-radius: 2rem; overflow: hidden; box-shadow: var(--shadow-soft); }
+  .reveal-main img { width: 100%; height: 100%; object-fit: cover; }
+  .reveal-tape { position: absolute; top: 1.2rem; left: 1.2rem; font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; font-weight: 600; color: var(--plum); background: color-mix(in oklab, var(--ivory) 75%, transparent); backdrop-filter: blur(6px); padding: .45rem .8rem; border-radius: 999px; }
+  .reveal-side { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); writing-mode: vertical-rl; font-size: .68rem; letter-spacing: .28em; text-transform: uppercase; font-weight: 600; color: var(--ivory); }
+  .reveal-inset { position: absolute; left: -1.5rem; bottom: -2rem; z-index: 2; width: 42%; aspect-ratio: 1; border: .45rem solid var(--ivory); border-radius: 1.25rem; overflow: hidden; box-shadow: var(--shadow-soft); transform: rotate(-3deg); }
+  .reveal-inset img { width: 100%; height: 100%; object-fit: cover; }
+  .reveal-badge { position: absolute; top: -2.4rem; left: -1.4rem; z-index: 3; width: 7.2rem; height: 7.2rem; border-radius: 50%; background: var(--coral); box-shadow: var(--shadow-soft); display: flex; align-items: center; justify-content: center; }
+  .reveal-badge svg { width: 100%; height: 100%; animation: badge-spin 18s linear infinite; }
+  .reveal-badge-text { font-size: 9.5px; letter-spacing: 2.4px; text-transform: uppercase; font-weight: 600; fill: var(--ivory); font-family: var(--font-sans); }
+  .reveal-badge-core { position: absolute; font-size: 1.7rem; color: var(--ivory); }
+  @keyframes badge-spin { to { transform: rotate(360deg); } }
+  .reveal-marquee { width: 100%; overflow: hidden; margin-top: 4.5rem; border-top: 1px solid color-mix(in oklab, var(--forest) 20%, transparent); padding: 1.15rem 0 1.45rem; }
+  .reveal-marquee-track { display: flex; width: max-content; animation: marquee 30s linear infinite; }
+  .reveal-marquee-group { display: flex; }
+  .reveal-marquee-group > span { display: inline-flex; align-items: baseline; gap: 1rem; padding-right: 1rem; font-family: var(--font-display); font-size: 1rem; letter-spacing: .16em; text-transform: uppercase; color: color-mix(in oklab, var(--forest) 80%, transparent); white-space: nowrap; }
+  .reveal-marquee-track i { font-style: normal; color: var(--coral); }
+  @keyframes marquee { to { transform: translateX(-50%); } }
 
 
 /* Campaign framing is shared with the scroll rig through product slots. */
@@ -224,7 +243,7 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
   .closing-copy { position: relative; z-index: 1; }
   .closing-ribbon { position: absolute; right: 8%; top: 8%; width: 34%; height: 73%; background: var(--sky); border-radius: 50% 50% 4px 4px; transform: rotate(-9deg); }
   .closing-footer { width: 100%; border-top: 1px solid var(--border); overflow: hidden; }
-  .footer-grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 3rem; align-items: start; padding-top: 3.5rem; padding-bottom: 2.5rem; }
+  .footer-grid { display: grid; grid-template-columns: 1.35fr .75fr .95fr 1fr; gap: 3rem; align-items: start; padding-top: 3.5rem; padding-bottom: 2.5rem; }
   .footer-brand { display: flex; flex-direction: column; gap: .8rem; max-width: 15rem; }
   .footer-tagline { font-size: .95rem; line-height: 1.5; color: var(--muted-foreground); }
   .footer-col { display: flex; flex-direction: column; gap: .9rem; }
@@ -235,9 +254,15 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
   .footer-color-btn { display: inline-flex; align-items: center; gap: .6rem; padding: 0; font-size: .88rem; }
   .footer-color-btn .swatch { width: 1.05rem; height: 1.05rem; }
   .footer-mood { color: var(--muted-foreground); font-weight: 400; }
+  .footer-news { margin-top: .2rem; display: flex; gap: .5rem; max-width: 21rem; }
+  .footer-news input { flex: 1; min-width: 0; border-radius: 999px; border: 1px solid color-mix(in oklab, var(--plum) 18%, transparent); background: color-mix(in oklab, var(--ivory) 60%, transparent); padding: .55rem 1rem; font-size: .85rem; color: var(--foreground); }
+  .footer-news input::placeholder { color: var(--muted-foreground); }
+  .footer-news input:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
+  .footer-note { font-size: .74rem; color: var(--muted-foreground); }
+  .footer-idx { font-family: var(--font-display); font-size: .72rem; color: var(--coral); margin-right: .5rem; font-weight: 600; }
   .footer-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-top: 1px solid var(--border); padding-top: 1.1rem; padding-bottom: 1.4rem; font-size: .72rem; color: var(--muted-foreground); }
   .footer-giant { display: block; font-family: var(--font-display); font-weight: 700; font-size: clamp(5.5rem, 17vw, 15rem); line-height: .78; letter-spacing: -.03em; text-align: center; color: color-mix(in oklab, var(--plum) 8%, transparent); user-select: none; pointer-events: none; margin-bottom: -.22em; }
-  .reveal-frame, .photo { border-radius: 8px; }
+  .photo { border-radius: 8px; }
   .fallback-bottle { position: relative; width: 100px; height: 290px; background: var(--variant-swatch); border-radius: 42px 42px 18px 18px; }
   .fallback-bottle::before { content: ''; position: absolute; left: 25%; right: 25%; height: 44px; top: -24px; background: var(--plum); border-radius: 8px; }
   .fallback-bottle span { position: absolute; left: 34%; top: 28%; writing-mode: vertical-rl; font-weight: 600; font-size: 2.3rem; color: var(--plum); }
@@ -290,7 +315,16 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
   .footer-mood { display: none; }
   .footer-bar { flex-direction: column; align-items: flex-start; gap: .3rem; }
   .footer-giant { font-size: 22vw; }
-  .reveal-frame { max-height: 500px; }
+  .reveal-scene { padding: 4rem 0 0; }
+  .reveal-grid { grid-template-columns: 1fr; gap: 2.25rem; }
+  .reveal-num { font-size: 7.5rem; top: -2.5rem; right: -.25rem; }
+  .reveal-main { width: 100%; max-height: 430px; }
+  .reveal-inset { left: -.5rem; bottom: -1.25rem; border-width: .3rem; }
+  .reveal-badge { width: 5.4rem; height: 5.4rem; top: -1.6rem; left: -.6rem; }
+  .reveal-badge-core { font-size: 1.25rem; }
+  .reveal-marquee { margin-top: 3rem; }
+  .reveal-marquee-group > span { font-size: .85rem; }
+  .footer-news { max-width: none; }
   .fallback-bottle { width: 70px; height: 210px; }
 }
 @media (prefers-reduced-motion: reduce) {
