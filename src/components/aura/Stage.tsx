@@ -20,7 +20,9 @@ export const POSES: Record<string, Pose> = {
   ritual: { x: -0.42, y: 0.1, s: 1.0, ry: 0.4, rz: -0.06, show: 1, bg: "#E6EFDE" },
   collection: { x: 0, y: -6, s: 0.6, ry: 0.2, rz: 0, show: 0, bg: "#FBF6EE" },
   world: { x: 0, y: -6, s: 0.6, ry: 0.2, rz: 0, show: 0, bg: "#F7E3D3" },
-  final: { x: 0.44, y: -0.05, s: 0.95, ry: 0.1, rz: -0.16, show: 1, bg: "#F7CEBC" },
+  // The closing scene is editorial-only: the bottle has already been showcased, so it
+  // stays offstage (like collection/world) instead of repeating a final product pose.
+  final: { x: 0, y: -6, s: 0.6, ry: 0.2, rz: 0, show: 0, bg: "#F7CEBC" },
 };
 
 const DETAIL: Record<DetailView, { s: number; y: number } | null> = {

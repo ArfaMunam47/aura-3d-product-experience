@@ -9,6 +9,10 @@ import worldImg from "@/assets/aura-world.jpg";
 import stillImg from "@/assets/aura-still.jpg";
 import rippleImg from "@/assets/aura-ripple.jpg";
 import fieldImg from "@/assets/aura-field.jpg";
+import windowMoment from "@/assets/aura-moment-window.jpg";
+import flatlayMoment from "@/assets/aura-moment-flatlay.jpg";
+import carryMoment from "@/assets/aura-moment-carry.jpg";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 export const Route = createFileRoute("/")({
   ssr: false,
@@ -343,18 +347,58 @@ function World() {
   );
 }
 
+/** Image inside a frame whose inner photo drifts gently against the scroll,
+ *  with frame-rate-independent damping; static under reduced motion. */
+function ParallaxImg({ src, alt, width, height, speed = 8, label, className = "" }: { src: string; alt: string; width: number; height: number; speed?: number; label?: string; className?: string }) {
+  const frame = useRef<HTMLDivElement>(null);
+  const img = useRef<HTMLImageElement>(null);
+  const reduced = useReducedMotion();
+  const pad = 1 + (Math.abs(speed) / 100) * 2; // zoom headroom so edges never show
+  useEffect(() => {
+    if (reduced) return;
+    let raf = 0;
+    let cur = 0;
+    const tick = () => {
+      const el = frame.current;
+      const image = img.current;
+      if (el && image) {
+        const r = el.getBoundingClientRect();
+        const mid = (r.top + r.height / 2 - window.innerHeight / 2) / (window.innerHeight / 2);
+        const target = Math.max(-1, Math.min(1, mid)) * speed;
+        cur += (target - cur) * 0.075;
+        image.style.transform = `translate3d(0, ${cur.toFixed(2)}%, 0) scale(${pad})`;
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [reduced, speed, pad]);
+  return (
+    <div ref={frame} className={`parallax-frame ${className}`}>
+      <img ref={img} src={src} alt={alt} loading="lazy" width={width} height={height} style={reduced ? undefined : { transform: `scale(${pad})` }} />
+      {label && <span className="moment-label">{label}</span>}
+    </div>
+  );
+}
+
+/** Closing editorial: layered lifestyle moments instead of a repeated product pose. */
 function Final() {
   return (
     <section data-scene="final" className="scene closing-scene">
-      <div className="closing-ribbon" aria-hidden />
       <div className="container-aura closing-grid">
         <InView className="closing-copy">
           <p className="eyebrow">A little more color. A little more you.</p>
           <h2 className="display-lg mt-5">Make room for your<br /><strong>everyday <span className="normal-case">AURA.</span></strong></h2>
           <p className="lede mt-5 max-w-sm">Thoughtful design. A little more color in every day.</p>
           <Button variant="aura" size="aura" className="btn-pill btn-pill-lg mt-8" onClick={() => scrollToId("bottle")}>Find your AURA <ArrowUpRight /></Button>
+          <p className="closing-foot mt-10 max-w-xs">The little moments that make AURA — first light, the midday refill, and out the door with everything that matters.</p>
         </InView>
-        <div data-product-slot className="closing-product" aria-hidden />
+        <InView className="closing-collage">
+          <ParallaxImg className="closing-main" src={windowMoment} alt="A peach AURA bottle on a sunlit windowsill beside a potted plant" width={1024} height={1280} speed={7} label="first light" />
+          <ParallaxImg className="closing-strip" src={carryMoment} alt="A peach AURA bottle lifted out of a sage canvas tote" width={576} height={1152} speed={10} />
+          <ParallaxImg className="closing-inset" src={flatlayMoment} alt="A peach AURA bottle on cream linen beside a notebook, tea and eucalyptus" width={1024} height={1024} speed={-5} label="the midday refill" />
+          <span className="closing-side" aria-hidden>the little moments that make AURA</span>
+        </InView>
       </div>
       <Footer />
     </section>
