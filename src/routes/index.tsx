@@ -4,14 +4,11 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpRight, RotateCcw, ArrowDown, ArrowUp } from "lucide-react";
 import { Stage } from "@/components/aura/Stage";
 import { Collection } from "@/components/aura/Collection";
-import { VARIANTS, auraStore, scrollToId, useAura, variantById, type DetailView } from "@/lib/aura-store";
+import { VARIANTS, auraStore, nextVariant, scrollToId, useAura, variantById, type DetailView } from "@/lib/aura-store";
 import worldImg from "@/assets/aura-world.jpg";
 import stillImg from "@/assets/aura-still.jpg";
 import rippleImg from "@/assets/aura-ripple.jpg";
 import fieldImg from "@/assets/aura-field.jpg";
-import windowMoment from "@/assets/aura-moment-window.jpg";
-import flatlayMoment from "@/assets/aura-moment-flatlay.jpg";
-import carryMoment from "@/assets/aura-moment-carry.jpg";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 export const Route = createFileRoute("/")({
@@ -173,26 +170,28 @@ function Reveal() {
             ))}
           </div>
         </InView>
-        <InView className="reveal-collage">
+        <InView className="reveal-visual">
           <span className="reveal-num" aria-hidden>03</span>
-          <figure className="reveal-main">
-            <img src={stillImg} alt="Morning light on a sunlit ledge with a ceramic cup, an open notebook and eucalyptus" loading="lazy" width={1024} height={1280} />
-            <span className="reveal-tape">morning light, kept close</span>
-            <span className="reveal-side" aria-hidden>everyday refresh</span>
-          </figure>
-          <figure className="reveal-inset">
-            <img src={rippleImg} alt="Rippling water catching the warm light of a pastel sky" loading="lazy" width={1024} height={1024} />
-          </figure>
-          <div className="reveal-badge" aria-hidden>
-            <svg viewBox="0 0 100 100">
-              <defs>
-                <path id="badge-arc" d="M50,50 m-35,0 a35,35 0 1,1 70,0 a35,35 0 1,1 -70,0" />
-              </defs>
-              <text className="reveal-badge-text">
-                <textPath href="#badge-arc">more color in every day · </textPath>
-              </text>
-            </svg>
-            <span className="reveal-badge-core">✺</span>
+          <DriftImg className="reveal-wash" src={rippleImg} alt="" width={1024} height={1024} speed={-4} />
+          <div className="reveal-stage">
+            <figure className="reveal-frame">
+              <span className="reveal-clip">
+                <DriftImg className="reveal-drift" src={stillImg} alt="Morning light on a sunlit ledge with a ceramic cup, an open notebook and eucalyptus" width={1024} height={1280} speed={5} />
+              </span>
+              <span className="reveal-tape">morning light, kept close</span>
+              <span className="reveal-side" aria-hidden>everyday refresh</span>
+            </figure>
+            <div className="reveal-badge" aria-hidden>
+              <svg viewBox="0 0 100 100">
+                <defs>
+                  <path id="badge-arc" d="M50,50 m-35,0 a35,35 0 1,1 70,0 a35,35 0 1,1 -70,0" />
+                </defs>
+                <text className="reveal-badge-text">
+                  <textPath href="#badge-arc">more color in every day · </textPath>
+                </text>
+              </svg>
+              <span className="reveal-badge-core">✺</span>
+            </div>
           </div>
         </InView>
       </div>
@@ -349,7 +348,7 @@ function World() {
 
 /** Image inside a frame whose inner photo drifts gently against the scroll,
  *  with frame-rate-independent damping; static under reduced motion. */
-function ParallaxImg({ src, alt, width, height, speed = 8, label, className = "" }: { src: string; alt: string; width: number; height: number; speed?: number; label?: string; className?: string }) {
+function DriftImg({ src, alt, width, height, speed = 6, className = "" }: { src: string; alt: string; width: number; height: number; speed?: number; className?: string }) {
   const frame = useRef<HTMLDivElement>(null);
   const img = useRef<HTMLImageElement>(null);
   const reduced = useReducedMotion();
@@ -374,32 +373,79 @@ function ParallaxImg({ src, alt, width, height, speed = 8, label, className = ""
     return () => cancelAnimationFrame(raf);
   }, [reduced, speed, pad]);
   return (
-    <div ref={frame} className={`parallax-frame ${className}`}>
+    <div ref={frame} className={`drift ${className}`}>
       <img ref={img} src={src} alt={alt} loading="lazy" width={width} height={height} style={reduced ? undefined : { transform: `scale(${pad})` }} />
-      {label && <span className="moment-label">{label}</span>}
     </div>
   );
 }
 
-/** Closing editorial: layered lifestyle moments instead of a repeated product pose. */
+/** Typography-led closing statement: no product pose, no photo collage —
+ *  the four moods live inside the AURA wordmark itself. Tapping it shifts
+ *  the selected variant, echoed by the mood hint beside the CTA. */
 function Final() {
+  const reduced = useReducedMotion();
+  const variant = useAura((s) => variantById(s.variant));
+  const echoRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    if (reduced) return;
+    let raf = 0;
+    let cur = 0;
+    const tick = () => {
+      const el = echoRef.current;
+      if (el) {
+        const r = el.getBoundingClientRect();
+        const mid = (r.top + r.height / 2 - window.innerHeight / 2) / (window.innerHeight / 2);
+        const target = Math.max(-1, Math.min(1, mid)) * -42;
+        cur += (target - cur) * 0.075;
+        el.style.transform = `translate3d(0, ${cur.toFixed(1)}px, 0)`;
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [reduced]);
+
+  const cycle = () => auraStore.set({ variant: nextVariant(auraStore.get().variant) });
+  const onKey = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); cycle(); }
+  };
+  const tint = `color-mix(in oklab, ${variant.body} 68%, var(--plum))`;
+
   return (
     <section data-scene="final" className="scene closing-scene">
-      <div className="container-aura closing-grid">
-        <InView className="closing-copy">
-          <p className="eyebrow">A little more color. A little more you.</p>
-          <h2 className="display-lg mt-5">Make room for your<br /><strong>everyday <span className="normal-case">AURA.</span></strong></h2>
-          <p className="lede mt-5 max-w-sm">Thoughtful design. A little more color in every day.</p>
-          <Button variant="aura" size="aura" className="btn-pill btn-pill-lg mt-8" onClick={() => scrollToId("bottle")}>Find your AURA <ArrowUpRight /></Button>
-          <p className="closing-foot mt-10 max-w-xs">The little moments that make AURA — first light, the midday refill, and out the door with everything that matters.</p>
-        </InView>
-        <InView className="closing-collage">
-          <ParallaxImg className="closing-main" src={windowMoment} alt="A peach AURA bottle on a sunlit windowsill beside a potted plant" width={1024} height={1280} speed={7} label="first light" />
-          <ParallaxImg className="closing-strip" src={carryMoment} alt="A peach AURA bottle lifted out of a sage canvas tote" width={576} height={1152} speed={10} />
-          <ParallaxImg className="closing-inset" src={flatlayMoment} alt="A peach AURA bottle on cream linen beside a notebook, tea and eucalyptus" width={1024} height={1024} speed={-5} label="the midday refill" />
-          <span className="closing-side" aria-hidden>the little moments that make AURA</span>
-        </InView>
-      </div>
+      <span ref={echoRef} className="closing-echo" aria-hidden>AURA</span>
+      <InView className="closing-statement">
+        <p className="eyebrow">A little more color. A little more you.</p>
+        <h2 className="closing-type mt-6">
+          <span className="closing-line"><span>make room</span></span>
+          <span className="closing-line"><span>for your</span></span>
+          <span className="closing-line"><span>
+            everyday{" "}
+            <span
+              className="closing-word"
+              role="button"
+              tabIndex={0}
+              onClick={cycle}
+              onKeyDown={onKey}
+              aria-label={`AURA — showing ${variant.name}. Activate to shift the mood.`}
+            >
+              {"AURA".split("").map((ch, i) => (
+                <span key={i} className="closing-letter" style={{ "--letter": tint } as React.CSSProperties}>{ch}</span>
+              ))}
+            </span>
+          </span></span>
+        </h2>
+        <span className="closing-rule" aria-hidden />
+        <p className="lede closing-lede mt-6">Thoughtful design. A little more color in every day.</p>
+        <div className="closing-actions mt-8">
+          <Button variant="aura" size="aura" className="btn-pill btn-pill-lg" onClick={() => scrollToId("bottle")}>Find your AURA <ArrowUpRight /></Button>
+          <p className="closing-hint" aria-live="polite">
+            <span className="closing-hint-swatch" style={{ background: variant.swatch }} aria-hidden />
+            {variant.name} · {variant.mood} — tap the wordmark to shift the mood
+          </p>
+        </div>
+      </InView>
       <Footer />
     </section>
   );

@@ -189,15 +189,28 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
   .reveal-ritual-n { font-family: var(--font-display); font-size: .8rem; color: var(--coral); font-weight: 600; }
   .reveal-ritual-t { font-weight: 600; font-size: .95rem; }
   .reveal-ritual-d { font-size: .85rem; color: var(--muted-foreground); }
-  .reveal-collage { position: relative; }
+  .reveal-ritual { opacity: 0; translate: 0 16px; transition: opacity .9s cubic-bezier(.2,.8,.2,1), translate .9s cubic-bezier(.2,.8,.2,1); }
+  .reveal-copy.is-in .reveal-ritual { opacity: 1; translate: 0 0; }
+  .reveal-copy.is-in .reveal-ritual:nth-child(1) { transition-delay: .1s; }
+  .reveal-copy.is-in .reveal-ritual:nth-child(2) { transition-delay: .25s; }
+  .reveal-copy.is-in .reveal-ritual:nth-child(3) { transition-delay: .4s; }
+  /* Right visual: one arched focal frame with an atmospheric wash behind —
+     a campaign focal point, not another photo collection. */
+  .reveal-visual { position: relative; }
   .reveal-num { position: absolute; top: -3.5rem; right: -1rem; z-index: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(9rem, 20vw, 19rem); line-height: .8; color: transparent; -webkit-text-stroke: 1.5px color-mix(in oklab, var(--forest) 28%, transparent); pointer-events: none; user-select: none; }
-  .reveal-main { position: relative; z-index: 1; margin-left: auto; width: min(100%, 34rem); aspect-ratio: 4/5; max-height: 72vh; border-radius: 2rem; overflow: hidden; box-shadow: var(--shadow-soft); }
-  .reveal-main img { width: 100%; height: 100%; object-fit: cover; }
-  .reveal-tape { position: absolute; top: 1.2rem; left: 1.2rem; font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; font-weight: 600; color: var(--plum); background: color-mix(in oklab, var(--ivory) 75%, transparent); backdrop-filter: blur(6px); padding: .45rem .8rem; border-radius: 999px; }
-  .reveal-side { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); writing-mode: vertical-rl; font-size: .68rem; letter-spacing: .28em; text-transform: uppercase; font-weight: 600; color: var(--ivory); }
-  .reveal-inset { position: absolute; left: -1.5rem; bottom: -2rem; z-index: 2; width: 42%; aspect-ratio: 1; border: .45rem solid var(--ivory); border-radius: 1.25rem; overflow: hidden; box-shadow: var(--shadow-soft); transform: rotate(-3deg); }
-  .reveal-inset img { width: 100%; height: 100%; object-fit: cover; }
-  .reveal-badge { position: absolute; top: -2.4rem; left: -1.4rem; z-index: 3; width: 7.2rem; height: 7.2rem; border-radius: 50%; background: var(--coral); box-shadow: var(--shadow-soft); display: flex; align-items: center; justify-content: center; }
+  .drift { overflow: hidden; }
+  .drift img { display: block; width: 100%; height: 100%; object-fit: cover; will-change: transform; }
+  .reveal-wash { position: absolute; top: -7%; right: -5%; z-index: 0; width: 74%; aspect-ratio: 4/5.4; border-radius: 999px 999px 1.5rem 1.5rem; opacity: .5; filter: blur(2px) saturate(.92); transition: opacity 1.3s cubic-bezier(.2,.8,.2,1); }
+  .reveal-visual:not(.is-in) .reveal-wash { opacity: 0; }
+  .reveal-stage { position: relative; z-index: 1; margin-left: auto; width: min(100%, 30rem); }
+  .reveal-frame { position: relative; width: 100%; aspect-ratio: 4/5.4; max-height: 76vh; border-radius: 999px 999px 1.5rem 1.5rem; overflow: hidden; box-shadow: var(--shadow-soft); }
+  .reveal-clip { position: absolute; inset: 0; display: block; clip-path: inset(16% 10% 30% 10%); transition: clip-path 1.5s cubic-bezier(.2,.8,.2,1); }
+  .reveal-visual.is-in .reveal-clip { clip-path: inset(0 0 0 0); }
+  .reveal-drift { position: absolute; inset: 0; transform: scale(1.14); transition: transform 1.9s cubic-bezier(.2,.8,.2,1); }
+  .reveal-visual.is-in .reveal-drift { transform: scale(1); }
+  .reveal-tape { position: absolute; top: 1.4rem; left: 50%; transform: translateX(-50%); z-index: 2; font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; font-weight: 600; color: var(--plum); background: color-mix(in oklab, var(--ivory) 75%, transparent); backdrop-filter: blur(6px); padding: .45rem .8rem; border-radius: 999px; white-space: nowrap; }
+  .reveal-side { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); z-index: 2; writing-mode: vertical-rl; font-size: .68rem; letter-spacing: .28em; text-transform: uppercase; font-weight: 600; color: var(--ivory); }
+  .reveal-badge { position: absolute; top: 30%; left: -2.4rem; z-index: 3; width: 7.2rem; height: 7.2rem; border-radius: 50%; background: var(--coral); box-shadow: var(--shadow-soft); display: flex; align-items: center; justify-content: center; }
   .reveal-badge svg { width: 100%; height: 100%; animation: badge-spin 18s linear infinite; }
   .reveal-badge-text { font-size: 9.5px; letter-spacing: 2.4px; text-transform: uppercase; font-weight: 600; fill: var(--ivory); font-family: var(--font-sans); }
   .reveal-badge-core { position: absolute; font-size: 1.7rem; color: var(--ivory); }

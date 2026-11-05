@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { auraStore, scrollToId, VARIANTS, variantById } from "@/lib/aura-store";
+import { auraStore, scrollToId, VARIANTS, variantById, nextVariant } from "@/lib/aura-store";
 
 describe("AURA product rules", () => {
   it("preserves the four required color variants", () => {
@@ -8,6 +8,14 @@ describe("AURA product rules", () => {
       auraStore.set({ variant: variant.id });
       expect(variantById(auraStore.get().variant).name).toBe(variant.name);
     }
+    auraStore.set({ variant: "petal" });
+  });
+
+  it("cycles the closing wordmark through all four variants in order", () => {
+    expect(nextVariant("petal")).toBe("sage");
+    expect(nextVariant("sage")).toBe("tide");
+    expect(nextVariant("tide")).toBe("cloud");
+    expect(nextVariant("cloud")).toBe("petal");
     auraStore.set({ variant: "petal" });
   });
 
