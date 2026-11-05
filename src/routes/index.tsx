@@ -170,26 +170,28 @@ function Reveal() {
             ))}
           </div>
         </InView>
-        <InView className="reveal-collage">
+        <InView className="reveal-visual">
           <span className="reveal-num" aria-hidden>03</span>
-          <figure className="reveal-main">
-            <img src={stillImg} alt="Morning light on a sunlit ledge with a ceramic cup, an open notebook and eucalyptus" loading="lazy" width={1024} height={1280} />
-            <span className="reveal-tape">morning light, kept close</span>
-            <span className="reveal-side" aria-hidden>everyday refresh</span>
-          </figure>
-          <figure className="reveal-inset">
-            <img src={rippleImg} alt="Rippling water catching the warm light of a pastel sky" loading="lazy" width={1024} height={1024} />
-          </figure>
-          <div className="reveal-badge" aria-hidden>
-            <svg viewBox="0 0 100 100">
-              <defs>
-                <path id="badge-arc" d="M50,50 m-35,0 a35,35 0 1,1 70,0 a35,35 0 1,1 -70,0" />
-              </defs>
-              <text className="reveal-badge-text">
-                <textPath href="#badge-arc">more color in every day · </textPath>
-              </text>
-            </svg>
-            <span className="reveal-badge-core">✺</span>
+          <DriftImg className="reveal-wash" src={rippleImg} alt="" width={1024} height={1024} speed={-4} />
+          <div className="reveal-stage">
+            <figure className="reveal-frame">
+              <span className="reveal-clip">
+                <DriftImg className="reveal-drift" src={stillImg} alt="Morning light on a sunlit ledge with a ceramic cup, an open notebook and eucalyptus" width={1024} height={1280} speed={5} />
+              </span>
+              <span className="reveal-tape">morning light, kept close</span>
+              <span className="reveal-side" aria-hidden>everyday refresh</span>
+            </figure>
+            <div className="reveal-badge" aria-hidden>
+              <svg viewBox="0 0 100 100">
+                <defs>
+                  <path id="badge-arc" d="M50,50 m-35,0 a35,35 0 1,1 70,0 a35,35 0 1,1 -70,0" />
+                </defs>
+                <text className="reveal-badge-text">
+                  <textPath href="#badge-arc">more color in every day · </textPath>
+                </text>
+              </svg>
+              <span className="reveal-badge-core">✺</span>
+            </div>
           </div>
         </InView>
       </div>
