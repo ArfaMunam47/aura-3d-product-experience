@@ -4,14 +4,11 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpRight, RotateCcw, ArrowDown, ArrowUp } from "lucide-react";
 import { Stage } from "@/components/aura/Stage";
 import { Collection } from "@/components/aura/Collection";
-import { VARIANTS, auraStore, scrollToId, useAura, variantById, type DetailView } from "@/lib/aura-store";
+import { VARIANTS, auraStore, nextVariant, scrollToId, useAura, variantById, type DetailView } from "@/lib/aura-store";
 import worldImg from "@/assets/aura-world.jpg";
 import stillImg from "@/assets/aura-still.jpg";
 import rippleImg from "@/assets/aura-ripple.jpg";
 import fieldImg from "@/assets/aura-field.jpg";
-import windowMoment from "@/assets/aura-moment-window.jpg";
-import flatlayMoment from "@/assets/aura-moment-flatlay.jpg";
-import carryMoment from "@/assets/aura-moment-carry.jpg";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 export const Route = createFileRoute("/")({

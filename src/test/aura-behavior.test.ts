@@ -11,6 +11,14 @@ describe("AURA product rules", () => {
     auraStore.set({ variant: "petal" });
   });
 
+  it("cycles the closing wordmark through all four variants in order", () => {
+    expect(nextVariant("petal")).toBe("sage");
+    expect(nextVariant("sage")).toBe("tide");
+    expect(nextVariant("tide")).toBe("cloud");
+    expect(nextVariant("cloud")).toBe("petal");
+    auraStore.set({ variant: "petal" });
+  });
+
   it("does not animate section navigation under reduced motion", () => {
     const element = document.createElement("section");
     element.id = "bottle";
