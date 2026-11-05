@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { auraStore, scrollToId, VARIANTS, variantById } from "@/lib/aura-store";
+import { auraStore, scrollToId, VARIANTS, variantById, nextVariant } from "@/lib/aura-store";
 
 describe("AURA product rules", () => {
   it("preserves the four required color variants", () => {

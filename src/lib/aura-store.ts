@@ -43,6 +43,12 @@ export const variantById = (id: VariantId) => {
   return { id: "petal" as const, name: "Petal", mood: "Soft peach", body: "#F2BBA1", cap: "#F07868", swatch: "#F6C7AE" };
 };
 
+/** The closing wordmark cycles the moods in collection order. */
+export function nextVariant(id: VariantId): VariantId {
+  const i = VARIANTS.findIndex((v) => v.id === id);
+  return VARIANTS[(Math.max(i, 0) + 1) % VARIANTS.length].id;
+}
+
 export function scrollToId(id: string) {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.getElementById(id)?.scrollIntoView({ behavior: reduced ? "instant" : "smooth", block: "start" });
