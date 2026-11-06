@@ -364,6 +364,14 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .aura-loader.is-done { display: none; }
+  /* show every reveal-gated element in its settled state, with no drift */
+  .reveal-clip { clip-path: none; }
+  .reveal-drift { transform: none; }
+  .reveal-visual:not(.is-in) .reveal-wash { opacity: .5; }
+  .reveal-ritual { opacity: 1; translate: none; }
+  .closing-line > span { transform: none; }
+  .closing-rule { transform: scaleX(1); }
+  .closing-echo { transform: none; }
 }
 
 .stage-layer { z-index: 30; }
