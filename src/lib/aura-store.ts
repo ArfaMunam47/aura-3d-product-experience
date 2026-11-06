@@ -46,7 +46,8 @@ export const variantById = (id: VariantId) => {
 /** The closing wordmark cycles the moods in collection order. */
 export function nextVariant(id: VariantId): VariantId {
   const i = VARIANTS.findIndex((v) => v.id === id);
-  return VARIANTS[(Math.max(i, 0) + 1) % VARIANTS.length].id;
+  const next = VARIANTS[(Math.max(i, 0) + 1) % VARIANTS.length];
+  return next ? next.id : "petal";
 }
 
 export function scrollToId(id: string) {
