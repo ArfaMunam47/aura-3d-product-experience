@@ -314,7 +314,7 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
   .display-md { font-size: 2.5rem; }
   .lede { font-size: 1rem; }
   .campaign-scene { padding: 100px 0 30px; }
-  .campaign-grid, .closing-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .campaign-grid { grid-template-columns: 1fr; gap: 1rem; }
   .campaign-product { height: 350px; min-height: 0; }
   .campaign-grid .mt-10 { margin-top: 1.5rem; }
   .hero-wave { display: block; width: 42%; height: 46%; top: auto; bottom: 0; }
@@ -337,11 +337,10 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
   .detail-slot { height: 360px; min-height: 0; }
   .detail-product .leader { bottom: -1rem; }
   .closing-scene { padding-top: 90px; }
-  .closing-collage { height: auto; min-height: 0; margin-top: 1rem; }
-  .closing-main { position: relative; top: auto; right: auto; width: 100%; max-height: 430px; }
-  .closing-strip { display: none; }
-  .closing-side { display: none; }
-  .closing-inset { position: relative; bottom: auto; left: auto; width: 62%; max-width: 300px; margin: -3.5rem 0 0 auto; border-width: .3rem; }
+  .closing-statement { padding-bottom: 1.25rem; }
+  .closing-type { font-size: 15vw; }
+  .closing-rule { width: 6rem; margin-top: 1.6rem; }
+  .closing-echo { font-size: 36vw; top: auto; bottom: 24%; right: -6%; }
   .footer-grid { grid-template-columns: 1fr; gap: 1.75rem; padding-top: 2.5rem; }
   .footer-brand { max-width: none; }
   .footer-col ul { flex-direction: row; flex-wrap: wrap; gap: .8rem 1.25rem; }
@@ -351,10 +350,12 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
   .reveal-scene { padding: 4rem 0 0; }
   .reveal-grid { grid-template-columns: 1fr; gap: 2.25rem; }
   .reveal-num { font-size: 7.5rem; top: -2.5rem; right: -.25rem; }
-  .reveal-main { width: 100%; max-height: 430px; }
-  .reveal-inset { left: -.5rem; bottom: -1.25rem; border-width: .3rem; }
-  .reveal-badge { width: 5.4rem; height: 5.4rem; top: -1.6rem; right: -.6rem; left: auto; }
+  .reveal-stage { width: 100%; }
+  .reveal-frame { max-height: 440px; }
+  .reveal-wash { width: 76%; right: -7%; top: -4%; }
+  .reveal-badge { width: 5.4rem; height: 5.4rem; left: -.9rem; top: 22%; }
   .reveal-badge-core { font-size: 1.25rem; }
+  .reveal-tape { font-size: .6rem; padding: .4rem .65rem; }
   .reveal-marquee { margin-top: 3rem; }
   .reveal-marquee-group > span { font-size: .85rem; }
   .footer-news { max-width: none; }
