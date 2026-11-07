@@ -416,7 +416,7 @@ function Final() {
     <section data-scene="final" className="scene closing-scene">
       <span ref={echoRef} className="closing-echo" aria-hidden>AURA</span>
       <InView className="closing-statement">
-        <p className="eyebrow">A little more color. A little more you.</p>
+        <p className="eyebrow">A LITTLE MORE COLOR. A LITTLE MORE YOU.</p>
         <h2 className="closing-type mt-6">
           <span className="closing-line"><span>make room</span></span>
           <span className="closing-line"><span>for your</span></span>
@@ -442,7 +442,7 @@ function Final() {
           <Button variant="aura" size="aura" className="btn-pill btn-pill-lg" onClick={() => scrollToId("bottle")}>Find your AURA <ArrowUpRight /></Button>
           <p className="closing-hint" aria-live="polite">
             <span className="closing-hint-swatch" style={{ background: variant.swatch }} aria-hidden />
-            {variant.name} · {variant.mood} — tap the wordmark to shift the mood
+            {variant.name}
           </p>
         </div>
       </InView>
@@ -456,29 +456,14 @@ function Footer() {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.scrollTo({ top: 0, behavior: reduced ? "instant" : "smooth" });
   };
-  const [joined, setJoined] = useState(false);
-  const chapters: [string, string, string][] = [
-    ["02", "The bottle", "bottle"],
-    ["03", "The story", "discover"],
-    ["04", "Details", "details"],
-    ["06", "In your world", "world"],
-  ];
   return (
     <footer className="closing-footer relative z-40 overflow-hidden">
-      <div className="container-aura footer-grid">
+      <div className="container-aura footer-layout">
         <div className="footer-brand">
           <span className="wordmark text-2xl text-foreground">AURA</span>
           <p className="footer-tagline">Carry a little calm, wherever the day takes you.</p>
-          <form className="footer-news" onSubmit={(e) => { e.preventDefault(); setJoined(true); }}>
-            <input type="email" required placeholder="you@example.com" aria-label="Email address" />
-            <Button variant="aura" size="aura" type="submit" className="chip">Join</Button>
-          </form>
-          <p className="footer-note" role="status">
-            {joined ? "Thanks — AURA is a design study, so nothing is sent." : "A quiet note from the studio, now and then."}
-          </p>
         </div>
-        <nav className="footer-col" aria-label="Explore AURA">
-          <p className="eyebrow">explore</p>
+        <nav className="footer-nav" aria-label="Explore AURA">
           <ul>
             <li><Button variant="aura" size="aura" className="footer-link" onClick={() => scrollToId("discover")}>Discover</Button></li>
             <li><Button variant="aura" size="aura" className="footer-link" onClick={() => scrollToId("bottle")}>The Bottle</Button></li>
@@ -486,39 +471,10 @@ function Footer() {
             <li><Button variant="aura" size="aura" className="footer-link" onClick={backToTop}>Back to top <ArrowUp size={14} /></Button></li>
           </ul>
         </nav>
-        <nav className="footer-col" aria-label="The experience, chapter by chapter">
-          <p className="eyebrow">the experience</p>
-          <ul>
-            {chapters.map(([n, label, id]) => (
-              <li key={id}>
-                <Button variant="aura" size="aura" className="footer-link" onClick={() => scrollToId(id)}>
-                  <span className="footer-idx">{n}</span>{label}
-                </Button>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <div className="footer-col">
-          <p className="eyebrow">the colors</p>
-          <ul>
-            {VARIANTS.map((v) => (
-              <li key={v.id}>
-                <Button variant="aura" size="aura" className={`footer-color-btn variant-${v.id}`} onClick={() => { auraStore.set({ variant: v.id }); scrollToId("bottle"); }}>
-                  <span className="swatch" aria-hidden />
-                  <span>{v.name}</span>
-                  <span className="footer-mood">{v.mood}</span>
-                </Button>
-              </li>
-            ))}
-          </ul>
-        </div>
       </div>
       <div className="container-aura footer-bar">
-        <span>© 2026 AURA — a product design study</span>
-        <span>thoughtful design, in four colors</span>
-        <span>stills on this page are AI-rendered</span>
+        <span>© 2026 AURA</span>
       </div>
-      <div className="footer-giant" aria-hidden>AURA</div>
     </footer>
   );
 }
