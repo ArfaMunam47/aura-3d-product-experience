@@ -439,7 +439,7 @@ function Final() {
         <span className="closing-rule" aria-hidden />
         <p className="lede closing-lede mt-6">Thoughtful design. A little more color in every day.</p>
         <div className="closing-actions mt-8">
-          <Button variant="aura" size="aura" className="btn-pill btn-pill-lg" onClick={() => scrollToId("bottle")}>Find your AURA <ArrowUpRight /></Button>
+          <Button variant="aura" size="aura" className="closing-cta" onClick={() => scrollToId("bottle")}>Find your AURA <ArrowUpRight /></Button>
           <p className="closing-hint" aria-live="polite">
             <span className="closing-hint-swatch" style={{ background: variant.swatch }} aria-hidden />
             {variant.name}
