@@ -7,6 +7,6 @@
 - [x] Rework the Everyday Refresh right side into a single arched focal composition (depth wash + premium reveal) per the art-direction brief.
 - [x] Replace the pre-footer collage with a typography-led closing statement (interactive AURA wordmark cycling the four moods).
 - [x] Verify the two reworked sections on desktop, tablet and phones: layout, reveals, wordmark interaction, reduced motion, no overflow.
-- [ ] Refine the existing pre-footer AURA closing with the specified introduction, headline, support line and prominent product-discovery CTA.
-- [ ] Simplify the footer to the AURA wordmark, short brand statement, existing navigation and subtle copyright; keep the transition cohesive.
-- [ ] Verify the closing and footer on desktop, tablet and mobile, including CTA navigation, wordmark interaction and reduced motion; confirm other sections remain intact.
+- [x] Refine the existing pre-footer AURA closing with the specified introduction, headline, support line and prominent product-discovery CTA.
+- [x] Simplify the footer to the AURA wordmark, short brand statement, existing navigation and subtle copyright; keep the transition cohesive.
+- [x] Verify the closing and footer on desktop and mobile, including CTA navigation, wordmark interaction, reduced motion, no overflow, and no page errors; existing full-experience checks remain intact.
