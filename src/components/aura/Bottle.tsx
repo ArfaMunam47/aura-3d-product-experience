@@ -34,7 +34,10 @@ function makeLabelTexture() {
 }
 
 function lathe(points: [number, number][], seg = 96) {
-  return new THREE.LatheGeometry(points.map(([x, y]) => new THREE.Vector2(x, y)), seg);
+  return new THREE.LatheGeometry(
+    points.map(([x, y]) => new THREE.Vector2(x, y)),
+    seg,
+  );
 }
 
 export function BottleMesh({ body, cap }: { body: string; cap: string }) {
@@ -42,10 +45,19 @@ export function BottleMesh({ body, cap }: { body: string; cap: string }) {
   const initialColors = useRef({ body, cap });
   const bodyMat = useRef<THREE.MeshPhysicalMaterial>(null);
   const capMat = useRef<THREE.MeshPhysicalMaterial>(null);
-  const target = useMemo(() => ({ body: new THREE.Color(body), cap: new THREE.Color(cap) }), [body, cap]);
+  const target = useMemo(
+    () => ({ body: new THREE.Color(body), cap: new THREE.Color(cap) }),
+    [body, cap],
+  );
 
   const bodyGeo = useMemo(() => {
-    const p: [number, number][] = [[0, 0.02], [R - 0.12, 0.0], [R - 0.04, 0.02], [R - 0.005, 0.07], [R, 0.14]];
+    const p: [number, number][] = [
+      [0, 0.02],
+      [R - 0.12, 0.0],
+      [R - 0.04, 0.02],
+      [R - 0.005, 0.07],
+      [R, 0.14],
+    ];
     // straight wall
     for (let i = 0; i <= 12; i++) p.push([R, 0.14 + (i / 12) * 2.36]);
     // soft shoulder to neck (cosine ease)
@@ -100,7 +112,14 @@ export function BottleMesh({ body, cap }: { body: string; cap: string }) {
   return (
     <group>
       <mesh geometry={bodyGeo} castShadow receiveShadow>
-        <meshPhysicalMaterial ref={bodyMat} color={initialColors.current.body} roughness={0.38} metalness={0} clearcoat={0.35} clearcoatRoughness={0.45} />
+        <meshPhysicalMaterial
+          ref={bodyMat}
+          color={initialColors.current.body}
+          roughness={0.38}
+          metalness={0}
+          clearcoat={0.35}
+          clearcoatRoughness={0.45}
+        />
       </mesh>
       {label && (
         <mesh position={[0, LABEL_Y0 + LABEL_H / 2, 0]} rotation-y={-Math.PI / 2}>
@@ -116,7 +135,12 @@ export function BottleMesh({ body, cap }: { body: string; cap: string }) {
       {/* Cap */}
       <group position={[0, 3.12, 0]}>
         <mesh geometry={capGeo} castShadow>
-          <meshPhysicalMaterial ref={capMat} color={initialColors.current.cap} roughness={0.5} clearcoat={0.2} />
+          <meshPhysicalMaterial
+            ref={capMat}
+            color={initialColors.current.cap}
+            roughness={0.5}
+            clearcoat={0.2}
+          />
         </mesh>
         {/* Carry loop */}
         <mesh position={[0, 0.5, 0]} castShadow>

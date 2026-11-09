@@ -30,15 +30,28 @@ function Item({ i, visible, hovered }: { i: number; visible: boolean; hovered: b
     const age = born.current === null ? 0 : s.clock.elapsedTime - born.current - i * 0.15;
     const p = reduced ? 1 : Math.min(Math.max(age / 0.9, 0), 1);
     const e = 1 - Math.pow(1 - p, 3);
-    ref.current.position.set(slot.x * m, -1.8 * (size.width < 640 ? 0.55 : 1) + (1 - e) * -2.5 + (hovered ? 0.12 : 0), slot.z);
-    ref.current.rotation.y += (0.12 - i * 0.08 + (hovered ? 0.08 : 0) - ref.current.rotation.y) * (reduced ? 1 : 1 - Math.exp(-4 * Math.min(d, .05)));
+    ref.current.position.set(
+      slot.x * m,
+      -1.8 * (size.width < 640 ? 0.55 : 1) + (1 - e) * -2.5 + (hovered ? 0.12 : 0),
+      slot.z,
+    );
+    ref.current.rotation.y +=
+      (0.12 - i * 0.08 + (hovered ? 0.08 : 0) - ref.current.rotation.y) *
+      (reduced ? 1 : 1 - Math.exp(-4 * Math.min(d, 0.05)));
     ref.current.visible = p > 0;
   });
   if (!v || !slot) return null;
   return (
     <group ref={ref}>
       <BottleMesh body={v.body} cap={v.cap} />
-      <ContactShadows position={[0, 0.001, 0]} scale={2.6} blur={2.6} opacity={0.32} far={1.2} color="#38253F" />
+      <ContactShadows
+        position={[0, 0.001, 0]}
+        scale={2.6}
+        blur={2.6}
+        opacity={0.32}
+        far={1.2}
+        color="#38253F"
+      />
     </group>
   );
 }
@@ -50,7 +63,9 @@ export function Collection() {
   const active = useAura((s) => s.variant);
 
   useEffect(() => {
-    const io = new IntersectionObserver(([e]) => e?.isIntersecting && setVisible(true), { threshold: 0.35 });
+    const io = new IntersectionObserver(([e]) => e?.isIntersecting && setVisible(true), {
+      threshold: 0.35,
+    });
     if (host.current) io.observe(host.current);
     return () => io.disconnect();
   }, []);
@@ -72,7 +87,9 @@ export function Collection() {
       </div>
       <div className="grid grid-cols-4 gap-2">
         {VARIANTS.map((v, i) => (
-          <Button variant="aura" size="aura"
+          <Button
+            variant="aura"
+            size="aura"
             key={v.id}
             onMouseEnter={() => setHover(i)}
             onMouseLeave={() => setHover(-1)}

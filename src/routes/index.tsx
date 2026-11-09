@@ -4,7 +4,23 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpRight, RotateCcw, ArrowDown, ArrowUp } from "lucide-react";
 import { Stage } from "@/components/aura/Stage";
 import { Collection } from "@/components/aura/Collection";
-import { VARIANTS, auraStore, nextVariant, scrollToId, useAura, variantById, type DetailView } from "@/lib/aura-store";
+import { CtaSection } from "@/components/aura/CtaSection";
+import { EverydayAura } from "@/components/aura/EverydayAura";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  VARIANTS,
+  auraStore,
+  scrollToId,
+  useAura,
+  variantById,
+  type DetailView,
+} from "@/lib/aura-store";
 import worldImg from "@/assets/aura-world.jpg";
 import stillImg from "@/assets/aura-still.jpg";
 import rippleImg from "@/assets/aura-ripple.jpg";
@@ -12,13 +28,20 @@ import fieldImg from "@/assets/aura-field.jpg";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 export const Route = createFileRoute("/")({
-  ssr: false,
   head: () => ({
     meta: [
       { title: "AURA — Carry a little calm" },
-      { name: "description", content: "Meet AURA. An immersive 3D look at a reusable bottle, thoughtfully reimagined for everyday hydration." },
+      {
+        name: "description",
+        content:
+          "Meet AURA. An immersive 3D look at a reusable bottle, thoughtfully reimagined for everyday hydration.",
+      },
       { property: "og:title", content: "AURA — Carry a little calm" },
-      { property: "og:description", content: "Explore the AURA bottle in 3D: four colors, considered details, everyday rituals." },
+      {
+        property: "og:description",
+        content:
+          "Explore the AURA bottle in 3D: four colors, considered details, everyday rituals.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -44,26 +67,61 @@ function AuraPage() {
     <div className={`aura-root ${gl === false ? "no-webgl" : ""}`}>
       <div className="aura-bg" aria-hidden />
       <div className="aura-grain" aria-hidden />
-      {gl && <ProductBoundary onFailure={() => setGl(false)}><Stage /></ProductBoundary>}
+      {gl && (
+        <ProductBoundary onFailure={() => setGl(false)}>
+          <Stage />
+        </ProductBoundary>
+      )}
       <Loader done={ready || gl === false} />
       <Nav />
       <main className="relative z-20">
         <Hero />
-        <Viewer webgl={gl !== false} />
+        <Viewer webgl={gl === true} />
         <Reveal />
         <Details />
-        <section data-scene="collection" id="colors" className="scene flex-col justify-center gap-10 py-24">
+        <section
+          data-scene="collection"
+          id="colors"
+          className="scene flex-col justify-center gap-10 py-24"
+        >
           <div className="text-center">
             <p className="eyebrow">05 — The collection</p>
-            <h2 className="display-lg mt-4">four moods, <strong>one form</strong></h2>
+            <h2 className="display-lg mt-4">
+              four moods, <strong>one form</strong>
+            </h2>
           </div>
-          {gl && <ProductBoundary onFailure={() => setGl(false)}><Collection /></ProductBoundary>}
-          {gl === false && <div className="fallback-collection">{VARIANTS.map(v => <Button variant="aura" size="aura" key={v.id} onClick={() => { auraStore.set({ variant: v.id }); scrollToId("bottle"); }} className={`variant-${v.id}`}><span className="fallback-bottle"><span>AURA</span></span><span>{v.name}</span></Button>)}</div>}
+          {gl && (
+            <ProductBoundary onFailure={() => setGl(false)}>
+              <Collection />
+            </ProductBoundary>
+          )}
+          {gl === false && (
+            <div className="fallback-collection">
+              {VARIANTS.map((v) => (
+                <Button
+                  variant="aura"
+                  size="aura"
+                  key={v.id}
+                  onClick={() => {
+                    auraStore.set({ variant: v.id });
+                    scrollToId("bottle");
+                  }}
+                  className={`variant-${v.id}`}
+                >
+                  <span className="fallback-bottle">
+                    <span>AURA</span>
+                  </span>
+                  <span>{v.name}</span>
+                </Button>
+              ))}
+            </div>
+          )}
         </section>
         <World />
-        <Final />
+        <Final webgl={gl === true} />
+        <CtaSection webgl={gl === true} />
+        <Footer />
       </main>
-
     </div>
   );
 }
@@ -80,29 +138,69 @@ function Loader({ done }: { done: boolean }) {
   );
 }
 
-class ProductBoundary extends Component<{ children: ReactNode; onFailure: () => void }, { failed: boolean }> {
+class ProductBoundary extends Component<
+  { children: ReactNode; onFailure: () => void },
+  { failed: boolean }
+> {
   override state = { failed: false };
-  static getDerivedStateFromError() { return { failed: true }; }
-  override componentDidCatch() { this.props.onFailure(); }
-  override render() { return this.state.failed ? null : this.props.children; }
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  override componentDidCatch() {
+    this.props.onFailure();
+  }
+  override render() {
+    return this.state.failed ? null : this.props.children;
+  }
 }
 
 function Nav() {
-  const links: [string, string][] = [["Discover", "discover"], ["The Bottle", "bottle"], ["Colors", "colors"]];
+  const links: [string, string][] = [
+    ["Discover", "discover"],
+    ["The Bottle", "bottle"],
+    ["Colors", "colors"],
+  ];
   return (
     <header className="aura-nav fixed inset-x-0 top-0 z-40">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 md:px-10">
-        <Button variant="aura" size="aura" onClick={() => window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" })} className="wordmark text-lg text-foreground" aria-label="AURA, back to top">
+        <Button
+          variant="aura"
+          size="aura"
+          onClick={() =>
+            window.scrollTo({
+              top: 0,
+              behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                ? "instant"
+                : "smooth",
+            })
+          }
+          className="wordmark text-lg text-foreground"
+          aria-label="AURA, back to top"
+        >
           AURA
         </Button>
         <ul className="hidden gap-9 text-[0.95rem] font-medium text-foreground/80 md:flex">
           {links.map(([l, id]) => (
             <li key={id}>
-              <Button variant="aura" size="aura" className="nav-link" onClick={() => scrollToId(id)}>{l}</Button>
+              <Button
+                variant="aura"
+                size="aura"
+                className="nav-link"
+                onClick={() => scrollToId(id)}
+              >
+                {l}
+              </Button>
             </li>
           ))}
         </ul>
-        <Button variant="aura" size="aura" className="btn-pill btn-pill-sm" onClick={() => scrollToId("bottle")}>Explore</Button>
+        <Button
+          variant="aura"
+          size="aura"
+          className="btn-pill btn-pill-sm"
+          onClick={() => scrollToId("bottle")}
+        >
+          Explore
+        </Button>
       </nav>
     </header>
   );
@@ -110,8 +208,17 @@ function Nav() {
 
 function Wave({ color = "var(--coral)" }: { color?: string }) {
   return (
-    <svg className="hero-wave hidden md:block" viewBox="0 0 400 1000" preserveAspectRatio="none" aria-hidden>
-      <path d="M140 0 C 60 160, 220 300, 120 470 C 30 620, 180 780, 90 1000 L 400 1000 L 400 0 Z" fill={color} opacity="0.85" />
+    <svg
+      className="hero-wave hidden md:block"
+      viewBox="0 0 400 1000"
+      preserveAspectRatio="none"
+      aria-hidden
+    >
+      <path
+        d="M140 0 C 60 160, 220 300, 120 470 C 30 620, 180 780, 90 1000 L 400 1000 L 400 0 Z"
+        fill={color}
+        opacity="0.85"
+      />
     </svg>
   );
 }
@@ -122,21 +229,45 @@ function Hero() {
       <Wave />
       <div className="container-aura campaign-grid">
         <div className="pt-24 md:pt-0">
-          <p className="eyebrow rise" style={{ animationDelay: "0.2s" }}>AURA — Everyday objects, reimagined</p>
+          <p className="eyebrow rise" style={{ animationDelay: "0.2s" }}>
+            AURA — Everyday objects, reimagined
+          </p>
           <h1 className="display-xl mt-6 rise" style={{ animationDelay: "0.35s" }}>
-            carry a<br /><strong>little calm</strong>
+            carry a<br />
+            <strong>little calm</strong>
           </h1>
           <p className="lede mt-6 max-w-sm rise" style={{ animationDelay: "0.5s" }}>
             Meet AURA. Everyday hydration, thoughtfully reimagined.
           </p>
           <div className="mt-10 flex flex-wrap gap-3 rise" style={{ animationDelay: "0.65s" }}>
-            <Button variant="aura" size="aura" className="btn-pill" onClick={() => scrollToId("discover")}>Discover AURA</Button>
-            <Button variant="aura" size="aura" className="btn-ghost text-primary-foreground" style={{ borderColor: "color-mix(in oklab, var(--ivory) 60%, transparent)" }} onClick={() => scrollToId("bottle")}>Explore the bottle</Button>
+            <Button
+              variant="aura"
+              size="aura"
+              className="btn-pill"
+              onClick={() => scrollToId("discover")}
+            >
+              Discover AURA
+            </Button>
+            <Button
+              variant="aura"
+              size="aura"
+              className="btn-ghost text-primary-foreground"
+              style={{ borderColor: "color-mix(in oklab, var(--ivory) 60%, transparent)" }}
+              onClick={() => scrollToId("bottle")}
+            >
+              Explore the bottle
+            </Button>
           </div>
         </div>
         <div data-product-slot className="campaign-product" aria-hidden />
       </div>
-      <Button variant="aura" size="aura" onClick={() => scrollToId("discover")} className="scroll-cue" aria-label="Scroll to the story">
+      <Button
+        variant="aura"
+        size="aura"
+        onClick={() => scrollToId("discover")}
+        className="scroll-cue"
+        aria-label="Scroll to the story"
+      >
         <ArrowDown size={16} />
         <span className="scroll-cue-line" />
       </Button>
@@ -156,9 +287,16 @@ function Reveal() {
       <div className="container-aura relative reveal-grid">
         <InView className="reveal-copy">
           <p className="eyebrow">03 — Everyday refresh</p>
-          <h2 className="display-lg mt-5">less noise,<br /><em>more refresh,</em><br />every day.</h2>
+          <h2 className="display-lg mt-5">
+            less noise,
+            <br />
+            <em>more refresh,</em>
+            <br />
+            every day.
+          </h2>
           <p className="lede mt-6 max-w-md">
-            A reusable bottle made for the little rituals that make every day feel better — at your desk, on the trail, and everywhere in between.
+            A reusable bottle made for the little rituals that make every day feel better — at your
+            desk, on the trail, and everywhere in between.
           </p>
           <div className="reveal-rituals mt-10">
             {RITUALS.map(([n, t, d]) => (
@@ -171,15 +309,33 @@ function Reveal() {
           </div>
         </InView>
         <InView className="reveal-visual">
-          <span className="reveal-num" aria-hidden>03</span>
-          <DriftImg className="reveal-wash" src={rippleImg} alt="" width={1024} height={1024} speed={-4} />
+          <span className="reveal-num" aria-hidden>
+            03
+          </span>
+          <DriftImg
+            className="reveal-wash"
+            src={rippleImg}
+            alt=""
+            width={1024}
+            height={1024}
+            speed={-4}
+          />
           <div className="reveal-stage">
             <figure className="reveal-frame">
               <span className="reveal-clip">
-                <DriftImg className="reveal-drift" src={stillImg} alt="Morning light on a sunlit ledge with a ceramic cup, an open notebook and eucalyptus" width={1024} height={1280} speed={5} />
+                <DriftImg
+                  className="reveal-drift"
+                  src={stillImg}
+                  alt="Morning light on a sunlit ledge with a ceramic cup, an open notebook and eucalyptus"
+                  width={1024}
+                  height={1280}
+                  speed={5}
+                />
               </span>
               <span className="reveal-tape">morning light, kept close</span>
-              <span className="reveal-side" aria-hidden>everyday refresh</span>
+              <span className="reveal-side" aria-hidden>
+                everyday refresh
+              </span>
             </figure>
             <div className="reveal-badge" aria-hidden>
               <svg viewBox="0 0 100 100">
@@ -200,7 +356,9 @@ function Reveal() {
           {[0, 1].map((half) => (
             <div className="reveal-marquee-group" key={half} aria-hidden={half === 1}>
               {["less noise", "more refresh", "every day", "carry a little calm"].map((w) => (
-                <span key={w}>{w} <i>·</i></span>
+                <span key={w}>
+                  {w} <i>·</i>
+                </span>
               ))}
             </div>
           ))}
@@ -227,13 +385,21 @@ function Viewer({ webgl }: { webgl: boolean }) {
     if (!drag.current) return;
     const dx = (e.clientX - drag.current.x) / 140;
     const dy = (e.clientY - drag.current.y) / 400;
-    auraStore.set({ dragX: drag.current.bx + dx, dragY: Math.max(-0.35, Math.min(0.35, drag.current.by + dy)) });
+    auraStore.set({
+      dragX: drag.current.bx + dx,
+      dragY: Math.max(-0.35, Math.min(0.35, drag.current.by + dy)),
+    });
   };
   const onUp = () => {
     drag.current = null;
     setDragging(false);
   };
-  const details: [DetailView, string][] = [["full", "Full view"], ["cap", "Cap"], ["finish", "Finish"], ["base", "Base"]];
+  const details: [DetailView, string][] = [
+    ["full", "Full view"],
+    ["cap", "Cap"],
+    ["finish", "Finish"],
+    ["base", "Base"],
+  ];
 
   return (
     <section data-scene="viewer" id="bottle" className={`scene viewer-scene variant-${variantId}`}>
@@ -251,20 +417,32 @@ function Viewer({ webgl }: { webgl: boolean }) {
       <div className="container-aura pointer-events-none relative viewer-grid">
         <div className="viewer-copy pointer-events-auto">
           <p className="eyebrow">02 — Find your AURA</p>
-          <h2 className="display-lg mt-5">your color,<br /><em>your rhythm</em></h2>
+          <h2 className="display-lg mt-5">
+            your color,
+            <br />
+            <em>your rhythm</em>
+          </h2>
           <p className="lede mt-5 max-w-xs">One considered design. Four different moods.</p>
           <p className="mt-8 text-xs tracking-[0.25em] text-muted-foreground uppercase">
-            {webgl ? (dragging ? "Rotating…" : "Drag to rotate · ↔") : "3D unavailable on this device"}
+            {webgl
+              ? dragging
+                ? "Rotating…"
+                : "Drag to rotate · ↔"
+              : "3D unavailable on this device"}
           </p>
         </div>
         <div data-product-slot className="viewer-product" aria-hidden />
         <div className="viewer-controls pointer-events-auto">
           <p className="eyebrow">Color</p>
-          <p className="mt-2 font-display text-3xl text-foreground" aria-live="polite">{v.name}</p>
+          <p className="mt-2 font-display text-3xl text-foreground" aria-live="polite">
+            {v.name}
+          </p>
           <p className="text-sm text-muted-foreground">{v.mood}</p>
           <div className="mt-5 flex gap-3" role="radiogroup" aria-label="Bottle color">
             {VARIANTS.map((x) => (
-              <Button variant="aura" size="aura"
+              <Button
+                variant="aura"
+                size="aura"
                 key={x.id}
                 role="radio"
                 aria-checked={x.id === variantId}
@@ -277,12 +455,24 @@ function Viewer({ webgl }: { webgl: boolean }) {
           <p className="eyebrow mt-7">Inspect</p>
           <div className="mt-3 grid grid-cols-2 gap-2">
             {details.map(([id, label]) => (
-              <Button variant="aura" size="aura" key={id} aria-pressed={detail === id} onClick={() => auraStore.set({ detail: id })} className="chip">
+              <Button
+                variant="aura"
+                size="aura"
+                key={id}
+                aria-pressed={detail === id}
+                onClick={() => auraStore.set({ detail: id })}
+                className="chip"
+              >
                 {label}
               </Button>
             ))}
           </div>
-          <Button variant="aura" size="aura" className="btn-ghost mt-5 w-full justify-center" onClick={() => auraStore.set({ dragX: 0, dragY: 0, detail: "full" })}>
+          <Button
+            variant="aura"
+            size="aura"
+            className="btn-ghost mt-5 w-full justify-center"
+            onClick={() => auraStore.set({ dragX: 0, dragY: 0, detail: "full" })}
+          >
             <RotateCcw size={14} /> Reset view
           </Button>
         </div>
@@ -292,16 +482,51 @@ function Viewer({ webgl }: { webgl: boolean }) {
 }
 
 const DETAIL_COPY = [
-  { scene: "form", n: "01", t: <>considered <strong>form</strong></>, d: "Clean lines. Balanced proportions. A shape designed to feel natural in your hand.", tag: "Silhouette" },
-  { scene: "cap", n: "02", t: <>the little <strong>details</strong></>, d: "From the cap to the finish, every element deserves attention.", tag: "Cap & carry loop" },
-  { scene: "ritual", n: "03", t: <>made for <strong>everyday rituals</strong></>, d: "A considered companion for work, study, travel, and everyday moments.", tag: "Base & balance" },
+  {
+    scene: "form",
+    n: "01",
+    t: (
+      <>
+        considered <strong>form</strong>
+      </>
+    ),
+    d: "Clean lines. Balanced proportions. A shape designed to feel natural in your hand.",
+    tag: "Silhouette",
+  },
+  {
+    scene: "cap",
+    n: "02",
+    t: (
+      <>
+        the little <strong>details</strong>
+      </>
+    ),
+    d: "From the cap to the finish, every element deserves attention.",
+    tag: "Cap & carry loop",
+  },
+  {
+    scene: "ritual",
+    n: "03",
+    t: (
+      <>
+        made for <strong>everyday rituals</strong>
+      </>
+    ),
+    d: "A considered companion for work, study, travel, and everyday moments.",
+    tag: "Base & balance",
+  },
 ];
 
 function Details() {
   return (
     <>
       {DETAIL_COPY.map((c, i) => (
-        <section key={c.scene} data-scene={c.scene} id={i === 0 ? "details" : undefined} className="scene tone-forest detail-scene">
+        <section
+          key={c.scene}
+          data-scene={c.scene}
+          id={i === 0 ? "details" : undefined}
+          className="scene tone-forest detail-scene"
+        >
           <div className="container-aura detail-grid">
             <InView className="detail-product">
               <div data-product-slot className="detail-slot" aria-hidden />
@@ -330,16 +555,34 @@ function World() {
       <div className="container-aura grid items-center gap-10 md:grid-cols-[1.15fr_1fr]">
         <InView className="relative h-[70vh] min-h-[420px]">
           <div className="photo absolute left-0 top-0 h-[72%] w-[58%]">
-            <img src={fieldImg} alt="A woman holding a sage AURA bottle in a sunlit field" loading="lazy" width={1024} height={1280} />
+            <img
+              src={fieldImg}
+              alt="A woman holding a sage AURA bottle in a sunlit field"
+              loading="lazy"
+              width={1024}
+              height={1280}
+            />
           </div>
           <div className="photo absolute bottom-0 right-0 h-[56%] w-[52%]">
-            <img src={worldImg} alt="A sunlit desk with a notebook, ceramic cup and eucalyptus" loading="lazy" width={1600} height={1008} />
+            <img
+              src={worldImg}
+              alt="A sunlit desk with a notebook, ceramic cup and eucalyptus"
+              loading="lazy"
+              width={1600}
+              height={1008}
+            />
           </div>
         </InView>
         <InView className="md:pl-4">
           <p className="eyebrow">06 — In your world</p>
-          <h2 className="display-lg mt-5">small rituals,<br /><em>better moments</em></h2>
-          <p className="lede mt-5 max-w-xs">Designed to fit naturally into the rhythm of your day.</p>
+          <h2 className="display-lg mt-5">
+            small rituals,
+            <br />
+            <em>better moments</em>
+          </h2>
+          <p className="lede mt-5 max-w-xs">
+            Designed to fit naturally into the rhythm of your day.
+          </p>
         </InView>
       </div>
     </section>
@@ -348,7 +591,21 @@ function World() {
 
 /** Image inside a frame whose inner photo drifts gently against the scroll,
  *  with frame-rate-independent damping; static under reduced motion. */
-function DriftImg({ src, alt, width, height, speed = 6, className = "" }: { src: string; alt: string; width: number; height: number; speed?: number; className?: string }) {
+function DriftImg({
+  src,
+  alt,
+  width,
+  height,
+  speed = 6,
+  className = "",
+}: {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  speed?: number;
+  className?: string;
+}) {
   const frame = useRef<HTMLDivElement>(null);
   const img = useRef<HTMLImageElement>(null);
   const reduced = useReducedMotion();
@@ -374,107 +631,331 @@ function DriftImg({ src, alt, width, height, speed = 6, className = "" }: { src:
   }, [reduced, speed, pad]);
   return (
     <div ref={frame} className={`drift ${className}`}>
-      <img ref={img} src={src} alt={alt} loading="lazy" width={width} height={height} style={reduced ? undefined : { transform: `scale(${pad})` }} />
+      <img
+        ref={img}
+        src={src}
+        alt={alt}
+        loading="lazy"
+        width={width}
+        height={height}
+        style={reduced ? undefined : { transform: `scale(${pad})` }}
+      />
     </div>
   );
 }
 
-/** Typography-led closing statement: no product pose, no photo collage —
- *  the four moods live inside the AURA wordmark itself. Tapping it shifts
- *  the selected variant, echoed by the mood hint beside the CTA. */
-function Final() {
-  const reduced = useReducedMotion();
-  const variant = useAura((s) => variantById(s.variant));
-  const echoRef = useRef<HTMLSpanElement>(null);
+/** High-fashion editorial campaign presentation: "Make room for everyday AURA"
+ *  featuring the authentic 3D AURA bottle, rich typography hierarchy, specs,
+ *  and real-time color mood switching. */
+function Final({ webgl = true }: { webgl?: boolean }) {
+  return <EverydayAura webgl={webgl} />;
+}
 
-  useEffect(() => {
-    if (reduced) return;
-    let raf = 0;
-    let cur = 0;
-    const tick = () => {
-      const el = echoRef.current;
-      if (el) {
-        const r = el.getBoundingClientRect();
-        const mid = (r.top + r.height / 2 - window.innerHeight / 2) / (window.innerHeight / 2);
-        const target = Math.max(-1, Math.min(1, mid)) * -42;
-        cur += (target - cur) * 0.075;
-        el.style.transform = `translate3d(0, ${cur.toFixed(1)}px, 0)`;
-      }
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [reduced]);
-
-  const cycle = () => auraStore.set({ variant: nextVariant(auraStore.get().variant) });
-  const onKey = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); cycle(); }
-  };
-  const tint = `color-mix(in oklab, ${variant.body} 68%, var(--plum))`;
-
+function FooterLeaf({ className = "" }: { className?: string }) {
   return (
-    <section data-scene="final" className="scene closing-scene">
-      <span ref={echoRef} className="closing-echo" aria-hidden>AURA</span>
-      <InView className="closing-statement">
-        <p className="eyebrow">A LITTLE MORE COLOR. A LITTLE MORE YOU.</p>
-        <h2 className="closing-type mt-6">
-          <span className="closing-line"><span>make room</span></span>
-          <span className="closing-line"><span>for your</span></span>
-          <span className="closing-line"><span>
-            everyday{" "}
-            <span
-              className="closing-word"
-              role="button"
-              tabIndex={0}
-              onClick={cycle}
-              onKeyDown={onKey}
-              aria-label={`AURA — showing ${variant.name}. Activate to shift the mood.`}
-            >
-              {"AURA".split("").map((ch, i) => (
-                <span key={i} className="closing-letter" style={{ "--letter": tint } as React.CSSProperties}>{ch}</span>
-              ))}
-            </span>
-          </span></span>
-        </h2>
-        <span className="closing-rule" aria-hidden />
-        <p className="lede closing-lede mt-6">Thoughtful design. A little more color in every day.</p>
-        <div className="closing-actions mt-8">
-          <Button variant="aura" size="aura" className="closing-cta" onClick={() => scrollToId("bottle")}>Find your AURA <ArrowUpRight /></Button>
-          <p className="closing-hint" aria-live="polite">
-            <span className="closing-hint-swatch" style={{ background: variant.swatch }} aria-hidden />
-            {variant.name}
-          </p>
-        </div>
-      </InView>
-      <Footer />
-    </section>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        d="M12 21C12 16.5 14.5 12 20 8.5C15 8 12 11.5 12 21Z"
+        fill="currentColor"
+        fillOpacity="0.18"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M12 14.5C10 11 6.5 9 3 9C5 12.5 8 14.5 12 14.5Z"
+        fill="currentColor"
+        fillOpacity="0.14"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
+      <path d="M12 21V5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
   );
 }
 
 function Footer() {
+  const [contactOpen, setContactOpen] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [contactName, setContactName] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactMsg, setContactMsg] = useState("");
+
   const backToTop = () => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.scrollTo({ top: 0, behavior: reduced ? "instant" : "smooth" });
   };
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
+
   return (
-    <footer className="closing-footer relative z-40 overflow-hidden">
-      <div className="container-aura footer-layout">
-        <div className="footer-brand">
-          <span className="wordmark text-2xl text-foreground">AURA</span>
-          <p className="footer-tagline">Carry a little calm, wherever the day takes you.</p>
+    <footer
+      className="closing-footer relative z-40 overflow-hidden border-t-0"
+      style={{ background: "var(--ivory)" }}
+    >
+      <div className="container-aura pt-16 sm:pt-20 md:pt-24 pb-12 sm:pb-16">
+        <div className="grid grid-cols-1 md:grid-cols-[1.35fr_2fr] lg:grid-cols-[1.5fr_2fr] gap-12 lg:gap-20 items-start">
+          {/* Left Side — Brand Identity */}
+          <div className="flex flex-col items-start max-w-sm">
+            <div className="flex items-center gap-3">
+              <span className="wordmark text-3xl sm:text-4xl font-semibold tracking-tight text-foreground">
+                AURA
+              </span>
+              <FooterLeaf className="h-6 w-6 text-forest/45" />
+            </div>
+            <p className="mt-4 text-sm sm:text-base font-light text-muted-foreground leading-relaxed">
+              Carry a little calm, wherever the day takes you.
+            </p>
+          </div>
+
+          {/* Right Side — Navigation Columns */}
+          <nav
+            className="grid grid-cols-2 sm:grid-cols-3 gap-8 sm:gap-10 w-full"
+            aria-label="Footer navigation"
+          >
+            {/* Column 1: DISCOVER */}
+            <div className="flex flex-col gap-3">
+              <p className="eyebrow text-xs font-semibold tracking-[0.2em] uppercase text-foreground/60 mb-2">
+                Discover
+              </p>
+              <ul className="flex flex-col gap-2.5">
+                <li>
+                  <Button
+                    variant="aura"
+                    size="aura"
+                    className="group flex items-center gap-1.5 text-sm font-normal text-foreground/75 hover:text-foreground transition-colors duration-200 py-1 text-left cursor-pointer"
+                    onClick={() => scrollToId("discover")}
+                  >
+                    <span className="relative">
+                      Our Story
+                      <span className="absolute left-0 -bottom-0.5 h-[1px] w-full bg-foreground scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100" />
+                    </span>
+                    <ArrowUpRight className="h-3.5 w-3.5 text-coral opacity-0 -translate-x-1 translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0" />
+                  </Button>
+                </li>
+                <li>
+                  <Button
+                    variant="aura"
+                    size="aura"
+                    className="group flex items-center gap-1.5 text-sm font-normal text-foreground/75 hover:text-foreground transition-colors duration-200 py-1 text-left cursor-pointer"
+                    onClick={() => scrollToId("bottle")}
+                  >
+                    <span className="relative">
+                      Explore
+                      <span className="absolute left-0 -bottom-0.5 h-[1px] w-full bg-foreground scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100" />
+                    </span>
+                    <ArrowUpRight className="h-3.5 w-3.5 text-coral opacity-0 -translate-x-1 translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0" />
+                  </Button>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 2: THE BOTTLE */}
+            <div className="flex flex-col gap-3">
+              <p className="eyebrow text-xs font-semibold tracking-[0.2em] uppercase text-foreground/60 mb-2">
+                The Bottle
+              </p>
+              <ul className="flex flex-col gap-2.5">
+                <li>
+                  <Button
+                    variant="aura"
+                    size="aura"
+                    className="group flex items-center gap-1.5 text-sm font-normal text-foreground/75 hover:text-foreground transition-colors duration-200 py-1 text-left cursor-pointer"
+                    onClick={() => scrollToId("bottle")}
+                  >
+                    <span className="relative">
+                      The Bottle
+                      <span className="absolute left-0 -bottom-0.5 h-[1px] w-full bg-foreground scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100" />
+                    </span>
+                    <ArrowUpRight className="h-3.5 w-3.5 text-coral opacity-0 -translate-x-1 translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0" />
+                  </Button>
+                </li>
+                <li>
+                  <Button
+                    variant="aura"
+                    size="aura"
+                    className="group flex items-center gap-1.5 text-sm font-normal text-foreground/75 hover:text-foreground transition-colors duration-200 py-1 text-left cursor-pointer"
+                    onClick={() => scrollToId("colors")}
+                  >
+                    <span className="relative">
+                      Colors
+                      <span className="absolute left-0 -bottom-0.5 h-[1px] w-full bg-foreground scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100" />
+                    </span>
+                    <ArrowUpRight className="h-3.5 w-3.5 text-coral opacity-0 -translate-x-1 translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0" />
+                  </Button>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 3: CONNECT */}
+            <div className="flex flex-col gap-3 col-span-2 sm:col-span-1">
+              <p className="eyebrow text-xs font-semibold tracking-[0.2em] uppercase text-foreground/60 mb-2">
+                Connect
+              </p>
+              <ul className="flex flex-col gap-2.5">
+                <li>
+                  <Button
+                    variant="aura"
+                    size="aura"
+                    className="group flex items-center gap-1.5 text-sm font-normal text-foreground/75 hover:text-foreground transition-colors duration-200 py-1 text-left cursor-pointer"
+                    onClick={() => setContactOpen(true)}
+                  >
+                    <span className="relative">
+                      Contact
+                      <span className="absolute left-0 -bottom-0.5 h-[1px] w-full bg-foreground scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100" />
+                    </span>
+                    <ArrowUpRight className="h-3.5 w-3.5 text-coral opacity-0 -translate-x-1 translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0" />
+                  </Button>
+                </li>
+                <li>
+                  <a
+                    href="https://www.instagram.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-1.5 text-sm font-normal text-foreground/75 hover:text-foreground transition-colors duration-200 py-1 text-left"
+                  >
+                    <span className="relative">
+                      Instagram
+                      <span className="absolute left-0 -bottom-0.5 h-[1px] w-full bg-foreground scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100" />
+                    </span>
+                    <ArrowUpRight className="h-3.5 w-3.5 text-coral opacity-0 -translate-x-1 translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0" />
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </nav>
         </div>
-        <nav className="footer-nav" aria-label="Explore AURA">
-          <ul>
-            <li><Button variant="aura" size="aura" className="footer-link" onClick={() => scrollToId("discover")}>Discover</Button></li>
-            <li><Button variant="aura" size="aura" className="footer-link" onClick={() => scrollToId("bottle")}>The Bottle</Button></li>
-            <li><Button variant="aura" size="aura" className="footer-link" onClick={() => scrollToId("colors")}>Colors</Button></li>
-            <li><Button variant="aura" size="aura" className="footer-link" onClick={backToTop}>Back to top <ArrowUp size={14} /></Button></li>
-          </ul>
-        </nav>
+
+        {/* Bottom Footer Bar */}
+        <div className="mt-14 sm:mt-16 pt-7 border-t border-forest/15 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-light text-muted-foreground">
+          <p>© 2026 AURA. All rights reserved.</p>
+          <Button
+            variant="aura"
+            size="aura"
+            onClick={backToTop}
+            className="group inline-flex items-center gap-1.5 text-xs font-medium text-foreground/70 hover:text-foreground transition-colors cursor-pointer py-1"
+            aria-label="Back to top"
+          >
+            <span>Back to top</span>
+            <ArrowUp className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-y-1 text-coral" />
+          </Button>
+        </div>
       </div>
-      <div className="container-aura footer-bar">
-        <span>© 2026 AURA</span>
-      </div>
+
+      {/* Interactive Contact Inquiries Dialog */}
+      <Dialog open={contactOpen} onOpenChange={setContactOpen}>
+        <DialogContent
+          className="sm:max-w-[440px] border-border p-6 sm:p-8 rounded-2xl shadow-soft"
+          style={{ background: "var(--ivory)" }}
+        >
+          <DialogHeader className="text-left space-y-2">
+            <div className="flex items-center gap-2 text-forest text-xs font-semibold uppercase tracking-widest">
+              <span>AURA Inquiries</span>
+            </div>
+            <DialogTitle className="text-2xl font-display font-medium text-foreground">
+              Get in touch
+            </DialogTitle>
+            <DialogDescription className="text-sm font-light text-muted-foreground leading-relaxed">
+              Have a question about our materials, color drops, or everyday hydration rituals? Send
+              us a note.
+            </DialogDescription>
+          </DialogHeader>
+
+          {submitted ? (
+            <div className="py-8 text-center flex flex-col items-center gap-2">
+              <p className="text-base font-medium text-foreground">Thank you for reaching out.</p>
+              <p className="text-sm text-muted-foreground">
+                Carry a little calm. We will reply shortly.
+              </p>
+              <Button
+                variant="aura"
+                size="aura"
+                onClick={() => {
+                  setSubmitted(false);
+                  setContactOpen(false);
+                  setContactName("");
+                  setContactEmail("");
+                  setContactMsg("");
+                }}
+                className="btn-pill btn-pill-sm mt-4"
+              >
+                Close
+              </Button>
+            </div>
+          ) : (
+            <form onSubmit={handleContactSubmit} className="space-y-4 mt-2">
+              <div>
+                <label className="text-xs uppercase tracking-wider text-muted-foreground font-semibold block mb-1.5">
+                  Your Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={contactName}
+                  onChange={(e) => setContactName(e.target.value)}
+                  placeholder="Maya Lin"
+                  className="w-full px-3.5 py-2.5 rounded-lg border border-border bg-card/60 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                />
+              </div>
+              <div>
+                <label className="text-xs uppercase tracking-wider text-muted-foreground font-semibold block mb-1.5">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={contactEmail}
+                  onChange={(e) => setContactEmail(e.target.value)}
+                  placeholder="maya@example.com"
+                  className="w-full px-3.5 py-2.5 rounded-lg border border-border bg-card/60 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                />
+              </div>
+              <div>
+                <label className="text-xs uppercase tracking-wider text-muted-foreground font-semibold block mb-1.5">
+                  Message
+                </label>
+                <textarea
+                  required
+                  rows={3}
+                  value={contactMsg}
+                  onChange={(e) => setContactMsg(e.target.value)}
+                  placeholder="Tell us what's on your mind..."
+                  className="w-full px-3.5 py-2.5 rounded-lg border border-border bg-card/60 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+                />
+              </div>
+              <div className="pt-2 flex justify-end gap-2">
+                <Button
+                  type="button"
+                  variant="aura"
+                  size="aura"
+                  onClick={() => setContactOpen(false)}
+                  className="btn-ghost text-xs px-4 py-2"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  variant="aura"
+                  size="aura"
+                  className="btn-pill btn-pill-sm text-xs px-5 py-2"
+                >
+                  Send note
+                </Button>
+              </div>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
     </footer>
   );
 }
@@ -487,5 +968,9 @@ function InView({ children, className = "" }: { children: React.ReactNode; class
     if (ref.current) io.observe(ref.current);
     return () => io.disconnect();
   }, []);
-  return <div ref={ref} className={`inview ${on ? "is-in" : ""} ${className}`}>{children}</div>;
+  return (
+    <div ref={ref} className={`inview ${on ? "is-in" : ""} ${className}`}>
+      {children}
+    </div>
+  );
 }

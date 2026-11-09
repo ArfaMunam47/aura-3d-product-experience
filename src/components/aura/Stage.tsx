@@ -23,6 +23,7 @@ export const POSES: Record<string, Pose> = {
   // The closing scene is editorial-only: the bottle has already been showcased, so it
   // stays offstage (like collection/world) instead of repeating a final product pose.
   final: { x: 0, y: -6, s: 0.6, ry: 0.2, rz: 0, show: 0, bg: "#F7CEBC" },
+  cta: { x: 0, y: -6, s: 0.6, ry: 0.2, rz: 0, show: 0, bg: "#C5DCF2" },
 };
 
 const DETAIL: Record<DetailView, { s: number; y: number } | null> = {
@@ -54,18 +55,32 @@ function readScroll() {
   const hero = POSES["hero"] as Pose;
   const a: Pose = POSES[els[i]?.dataset["scene"] ?? "hero"] ?? hero;
   const b: Pose = POSES[els[Math.min(i + 1, els.length - 1)]?.dataset["scene"] ?? "hero"] ?? a;
-  return { a, b, aEl: els[i], bEl: els[Math.min(i + 1, els.length - 1)], f: ease(Math.min(Math.max(f, 0), 1)), activeName: els[f > 0.5 ? i + 1 : i]?.dataset["scene"] };
+  return {
+    a,
+    b,
+    aEl: els[i],
+    bEl: els[Math.min(i + 1, els.length - 1)],
+    f: ease(Math.min(Math.max(f, 0), 1)),
+    activeName: els[f > 0.5 ? i + 1 : i]?.dataset["scene"],
+  };
 }
 
-function frameSlot(el: HTMLElement | undefined, pose: Pose, width: number, height: number, worldW: number, worldH: number) {
+function frameSlot(
+  el: HTMLElement | undefined,
+  pose: Pose,
+  width: number,
+  height: number,
+  worldW: number,
+  worldH: number,
+) {
   const slot = el?.querySelector<HTMLElement>("[data-product-slot]");
-  if (!el || !slot) return { x: pose.x * worldW / 2, y: pose.y, s: pose.s };
+  if (!el || !slot) return { x: (pose.x * worldW) / 2, y: pose.y, s: pose.s };
   const r = slot.getBoundingClientRect();
-  const scaleH = (r.height / height * worldH) / 4.05;
-  const scaleW = (r.width / width * worldW) / 2.0;
+  const scaleH = ((r.height / height) * worldH) / 4.05;
+  const scaleW = ((r.width / width) * worldW) / 2.0;
   return {
     x: ((r.left + r.width / 2) / width - 0.5) * worldW,
-    y: -(r.top + r.height / 2 - height / 2) / height * worldH,
+    y: (-(r.top + r.height / 2 - height / 2) / height) * worldH,
     s: Math.min(scaleH, scaleW, pose.s),
   };
 }
@@ -145,12 +160,34 @@ export function Studio() {
   return (
     <>
       <ambientLight intensity={0.45} />
-      <directionalLight position={[4, 6, 5]} intensity={1.6} castShadow shadow-mapSize={[1024, 1024]} />
+      <directionalLight
+        position={[4, 6, 5]}
+        intensity={1.6}
+        castShadow
+        shadow-mapSize={[1024, 1024]}
+      />
       <directionalLight position={[-5, 2, -3]} intensity={0.6} color="#F6C7AE" />
       <Environment resolution={256}>
-        <Lightformer intensity={2.2} position={[0, 5, 2]} scale={[10, 4, 1]} rotation-x={Math.PI / 2} />
-        <Lightformer intensity={1.4} color="#FFE4D4" position={[-5, 1, 1]} rotation-y={Math.PI / 2} scale={[3, 8, 1]} />
-        <Lightformer intensity={1.2} color="#D9E8F6" position={[5, 1, 1]} rotation-y={-Math.PI / 2} scale={[3, 8, 1]} />
+        <Lightformer
+          intensity={2.2}
+          position={[0, 5, 2]}
+          scale={[10, 4, 1]}
+          rotation-x={Math.PI / 2}
+        />
+        <Lightformer
+          intensity={1.4}
+          color="#FFE4D4"
+          position={[-5, 1, 1]}
+          rotation-y={Math.PI / 2}
+          scale={[3, 8, 1]}
+        />
+        <Lightformer
+          intensity={1.2}
+          color="#D9E8F6"
+          position={[5, 1, 1]}
+          rotation-y={-Math.PI / 2}
+          scale={[3, 8, 1]}
+        />
         <Lightformer intensity={0.6} position={[0, 0, -6]} scale={[12, 6, 1]} />
       </Environment>
     </>

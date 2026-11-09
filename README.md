@@ -24,41 +24,41 @@ The visual identity combines contemporary editorial typography, carefully compos
 
 The design direction emphasizes:
 
-* 🧊 **Immersive Product Visualization** — Making the product the focal point of the experience.
-* 🖱️ **Interactive Exploration** — Encouraging visitors to engage with the product rather than simply view it.
-* 🎬 **Motion-Driven Storytelling** — Connecting individual scenes through coordinated transitions.
-* 🌈 **Expressive Art Direction** — Combining color, typography, depth, and composition into a cohesive visual language.
-* 📱 **Responsive Design** — Creating an experience that adapts thoughtfully to different screen sizes.
-* ⚡ **Performance & Usability** — Balancing visual ambition with accessibility and smooth interaction.
+- 🧊 **Immersive Product Visualization** — Making the product the focal point of the experience.
+- 🖱️ **Interactive Exploration** — Encouraging visitors to engage with the product rather than simply view it.
+- 🎬 **Motion-Driven Storytelling** — Connecting individual scenes through coordinated transitions.
+- 🌈 **Expressive Art Direction** — Combining color, typography, depth, and composition into a cohesive visual language.
+- 📱 **Responsive Design** — Creating an experience that adapts thoughtfully to different screen sizes.
+- ⚡ **Performance & Usability** — Balancing visual ambition with accessibility and smooth interaction.
 
 ## 🚀 Experience Highlights
 
 The project is designed around the following features, depending on the functionality implemented in the current build:
 
-* 🧴 Immersive product-focused landing page.
-* 🌀 Interactive 3D bottle visualization.
-* 🎨 Multiple bottle color variations.
-* 🎞️ Scroll-driven product storytelling.
-* 🔍 Animated product-detail presentations.
-* ✨ Smooth scene transitions and micro-interactions.
-* 📱 Responsive desktop and mobile layouts.
-* ♿ Reduced-motion considerations and graceful loading states.
+- 🧴 Immersive product-focused landing page.
+- 🌀 Interactive 3D bottle visualization.
+- 🎨 Multiple bottle color variations.
+- 🎞️ Scroll-driven product storytelling.
+- 🔍 Animated product-detail presentations.
+- ✨ Smooth scene transitions and micro-interactions.
+- 📱 Responsive desktop and mobile layouts.
+- ♿ Reduced-motion considerations and graceful loading states.
 
 ## 🛠️ Tech Stack
 
 The implementation may use the following technologies, depending on the final project configuration:
 
-* ⚛️ React
-* 📘 TypeScript
-* 🎨 Tailwind CSS
-* 🧊 Three.js
-* 🌀 React Three Fiber
-* 🧰 Drei
-* 🎬 GSAP & ScrollTrigger
-* 💫 Framer Motion or Motion
-* 🤖 Lovable for AI-assisted development
+- ⚛️ React
+- 📘 TypeScript
+- 🎨 Tailwind CSS
+- 🧊 Three.js
+- 🌀 React Three Fiber
+- 🧰 Drei
+- 🎬 GSAP & ScrollTrigger
+- 💫 Framer Motion or Motion
+- ⚡ TanStack Start, Nitro & Vite
 
-*The final technology list should reflect the dependencies actually used in the repository.*
+_The final technology list should reflect the dependencies actually used in the repository._
 
 ## 💡 Design Philosophy
 
@@ -99,9 +99,9 @@ Follow these steps to run the project locally.
 
 ### Prerequisites
 
-* 📦 Node.js
-* 📦 npm
-* 💻 A code editor such as Visual Studio Code
+- 📦 Node.js
+- 📦 npm
+- 💻 A code editor such as Visual Studio Code
 
 ### Installation
 
@@ -131,7 +131,7 @@ npm run dev
 
 Open the local URL displayed in your terminal to explore the experience.
 
-*Note: These commands assume the project uses npm and a compatible development script. Follow the actual project configuration if it differs.*
+_Note: These commands assume the project uses npm and a compatible development script. Follow the actual project configuration if it differs._
 
 ## 📁 Project Structure
 
@@ -155,7 +155,7 @@ aura-3d-product-experience/
 └── README.md
 ```
 
-*The structure above is illustrative. Keep it aligned with the actual project files.*
+_The structure above is illustrative. Keep it aligned with the actual project files._
 
 ## ♿ Performance & Accessibility
 
@@ -163,20 +163,19 @@ A visually rich experience should remain usable across devices.
 
 Key considerations include:
 
-* ⚡ Efficient 3D rendering and asset loading.
-* 📐 Responsive product framing and layout.
-* 👀 Readable typography and sufficient color contrast.
-* 🌿 Reduced-motion support.
-* 📱 Touch-friendly interactions.
-* 🛟 Graceful handling of loading and rendering failures.
-* 🔧 Prevention of unnecessary layout shifts and horizontal overflow.
+- ⚡ Efficient 3D rendering and asset loading.
+- 📐 Responsive product framing and layout.
+- 👀 Readable typography and sufficient color contrast.
+- 🌿 Reduced-motion support.
+- 📱 Touch-friendly interactions.
+- 🛟 Graceful handling of loading and rendering failures.
+- 🔧 Prevention of unnecessary layout shifts and horizontal overflow.
 
 ## 📍 Project Status
 
 **Status:** In Development 🚧
 
 The experience is being refined iteratively, with a focus on product quality, interactive 3D presentation, animation, and responsive behavior.
-
 
 ## 🙌 Credits
 

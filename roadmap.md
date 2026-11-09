@@ -1,4 +1,5 @@
 # AURA refinement
+
 - [x] Refine hero and second-scene composition without losing identity.
 - [x] Coordinate bottle framing, color transitions, details, and collection.
 - [x] Create signature closing scene and preserve navigation.

@@ -1,0 +1,6 @@
+{
+  "name": "AURA — 3D Product Experience",
+  "description": "An interactive, sensory 3D product experience for the AURA reusable water bottle featuring real-time Three.js bottle rendering and smooth scroll-driven scenes.",
+  "permissions": [],
+  "capabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- AURA Plum Squircle Base Tile -->
+  <rect width="64" height="64" rx="14" fill="#321D36" />
+  <rect x="0.75" y="0.75" width="62.5" height="62.5" rx="13.25" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" />
+
+  <!-- Authentic AURA Bottle Silhouette -->
+  <!-- 1. Ergonomic Top Carry Loop -->
+  <path d="M28 13.5 C28 8.8 36 8.8 36 13.5" fill="none" stroke="#E76F55" stroke-width="2.6" stroke-linecap="round" />
+
+  <!-- 2. Minimalist Insulated Cap -->
+  <rect x="26" y="13.5" width="12" height="6.5" rx="1.8" fill="#FAF6F0" />
+
+  <!-- 3. Powder Blue Satin Collar Band -->
+  <rect x="26.5" y="20" width="11" height="1.6" rx="0.5" fill="#B8D5EE" />
+
+  <!-- 4. Contoured Reusable Bottle Body with Soft Curved Shoulders & Rounded Base -->
+  <path
+    d="M26.5 21.6 C26.5 25 20.5 27 20.5 31 L20.5 49.5 C20.5 51.5 22 52.5 24 52.5 L40 52.5 C42 52.5 43.5 51.5 43.5 49.5 L43.5 31 C43.5 27 37.5 25 37.5 21.6 Z"
+    fill="#FAF6F0"
+  />
+
+  <!-- 5. Signature AURA Water Drop Mark (Coral Accent) -->
+  <path
+    d="M32 35.5 C30.2 38.2 29.2 39.8 29.2 41.2 C29.2 42.75 30.45 44 32 44 C33.55 44 34.8 42.75 34.8 41.2 C34.8 39.8 33.8 38.2 32 35.5 Z"
+    fill="#E76F55"
+  />
+</svg>
